@@ -84,16 +84,21 @@ header nav a:hover {
   display: inline-block;
 }
 
-/* Dropdown content */
-.dropdown-content {
+/* Dropdown content */ /* fixed it no longer cut off*/
+.dropdwn-content {
   display: none;
   position: absolute;
+  right: 0;
+  left: auto;             
   background-color: white;
   min-width: 200px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  z-index: 100;
+  max-width: 95vw; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: visible; 
+  z-index: 9999;      
+  transform: translateX(-10%); 
 }
 
 /* Dropdown links inside */
@@ -430,3 +435,4 @@ footer a:hover {
     display: flex;
   }
 }
+
