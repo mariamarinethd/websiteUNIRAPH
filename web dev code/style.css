@@ -84,9 +84,8 @@ header nav a:hover {
   display: inline-block;
 }
 
-
 /* Dropdown content */
-.dropdwn-content {
+.dropdown-content {
   display: none;
   position: absolute;
   background-color: white;
@@ -96,7 +95,6 @@ header nav a:hover {
   border-radius: 5px;
   overflow: hidden;
 }
-
 
 /* Dropdown links inside */
 .dropdown-content a {
@@ -432,5 +430,3 @@ footer a:hover {
     display: flex;
   }
 }
-
-
