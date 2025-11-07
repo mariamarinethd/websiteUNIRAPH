@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find Rides - UniraPh</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="flex items-center">
+      <i class="fas fa-car" style="margin-right:10px;font-size:1.8rem;"></i>
+      <h1>UniraPh</h1>
+    </div>
+    <nav class="desktop-nav">
+      <a href="UNIRAPH.html">Home</a>
+      <a href="find.html">Find Rides</a>
+      <a href="offer.html">Offer Rides</a>
+      <a href="#about.html">About</a>
+      <div class="nav-buttons">
+        <button id="signInBtn" class="btn-signin">Sign In</button>
+        <button id="signUpBtn" class="btn-signup">Sign Up</button>
+      </div>
+    </nav>
+    <button id="mobileMenuButton" class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu">
+    <a href="index.html">Home</a>
+    <a href="find.html">Find Rides</a>
+    <a href="offer.html">Offer Rides</a>
+    <a href="about.html">About</a>
+    <button id="signInBtnMobile" class="btn-signin">Sign In</button>
+    <button id="signUpBtnMobile" class="btn-signup">Sign Up</button>
+  </div>
+
+  <!-- Find Ride Form -->
+  <main style="padding:4rem 1.5rem; background:#f8fafc;">
+    <div id="findRideForm" class="form-box">
+      <h3>Find Your Perfect Ride</h3>
+      <form class="form-grid form-grid-4">
+        <div>
+          <label>From</label>
+          <input type="text" placeholder="Starting location" required>
+        </div>
+        <div>
+          <label>To</label>
+          <input type="text" placeholder="Destination" required>
+        </div>
+        <div>
+          <label>Date</label>
+          <input type="date" required>
+        </div>
+        <div>
+          <button type="submit">Search Rides</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Example Available Rides -->
+    <h2 style="margin:2rem 0;font-size:1.5rem;font-weight:bold;">Available Rides</h2>
+    <div class="cards">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;">
+          <h3>Lucena City to Pagbilao</h3>
+          <span class="badge badge-green">Verified</span>
+        </div>
+        <p><i class="fas fa-calendar-day"></i> Morning trip (7–8 AM)</p>
+        <p><i class="fas fa-user"></i> Mark R. - Toyota Vios</p>
+        <p><i class="fas fa-users"></i> 3 seats available</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="price">₱80</span>
+          <button>Book Now</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+ <!-- Footer -->
+<footer>
+  <div class="footer-grid">
+    <!-- Brand & Description -->
+    <div>
+      <div class="footer-logo" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+        <i class="fas fa-car" style="font-size:1.8rem;color:#2563eb;"></i>
+        <span style="font-weight:bold;font-size:1.3rem;color:white;">UniraPh</span>
+      </div>
+      <p>Connecting travelers for shared journeys. Save money, reduce emissions, and make new connections.</p>
+    </div>
+
+    <!-- Quick Links -->
+    <div>
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#">How it Works</a></li>
+        <li><a href="#">Safety Guidelines</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+
+    <!-- Legal -->
+    <div>
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Cookie Policy</a></li>
+      </ul>
+    </div>
+
+    <!-- Connect & Apps -->
+    <div>
+      <h4>Connect With Us</h4>
+      <div class="socials" style="margin-bottom:1rem; display:flex; gap:0.5rem;">
+        <a href="#"><i class="fab fa-facebook-f" style="font-size:1.2rem;"></i></a>
+        <a href="#"><i class="fab fa-twitter" style="font-size:1.2rem;"></i></a>
+        <a href="#"><i class="fab fa-instagram" style="font-size:1.2rem;"></i></a>
+        <a href="mailto:info@uniraph.com"><i class="fas fa-envelope" style="font-size:1.2rem;"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in" style="font-size:1.2rem;"></i></a>
+      </div>
+      <div>
+        <h5>Download Our App</h5>
+        <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
+          <button style="background:black;color:white;padding:0.5rem 1rem;border-radius:5px;">App Store</button>
+          <button style="background:black;color:white;padding:0.5rem 1rem;border-radius:5px;">Google Play</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Bottom -->
+  <div class="footer-bottom">
+    <p>© 2025 UniraPh. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- Make sure to include Font Awesome in <head> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</body>
+</html>
