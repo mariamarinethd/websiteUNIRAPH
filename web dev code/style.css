@@ -84,12 +84,11 @@ header nav a:hover {
   display: inline-block;
 }
 
+
 /* Dropdown content */
 .dropdwn-content {
   display: none;
   position: absolute;
-  right: 0;               /* ✅ keeps dropdown aligned to the right edge of its parent */
-  left: auto;             /* ✅ prevents it from pushing out of screen */
   background-color: white;
   min-width: 200px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
