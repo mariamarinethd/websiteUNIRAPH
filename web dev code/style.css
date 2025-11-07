@@ -94,6 +94,7 @@ header nav a:hover {
   z-index: 100;
   border-radius: 5px;
   overflow: hidden;
+   left: -120px; /* move 50px to the left */
 }
 
 /* Dropdown links inside */
