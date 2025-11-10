@@ -79,4 +79,33 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  // ================= LIKE BUTTON FUNCTIONALITY =================
+  const likeButtons = document.querySelectorAll('.like-btn');
+
+  likeButtons.forEach((btn, index) => {
+    const countSpan = btn.querySelector('.like-count');
+
+    // Load saved likes from localStorage
+    const saved = localStorage.getItem('like-' + index);
+    if (saved) {
+      countSpan.textContent = saved;
+      if (parseInt(saved) > 0) btn.classList.add('liked');
+    }
+
+    // Handle like toggle
+    btn.addEventListener('click', () => {
+      let count = parseInt(countSpan.textContent);
+      if (btn.classList.contains('liked')) {
+        btn.classList.remove('liked');
+        count--;
+      } else {
+        btn.classList.add('liked');
+        count++;
+      }
+      countSpan.textContent = count;
+      localStorage.setItem('like-' + index, count);
+    });
+  });
+
 });
