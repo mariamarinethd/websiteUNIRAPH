@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Safety Guidelines | UniraPh</title>
+  <link rel="stylesheet" href="TAC.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Navbar same as homepage -->
+  <header>
+    <div class="flex items-center">
+      <i class="fas fa-car" style="margin-right:10px;font-size:1.8rem;color:white;"></i>
+      <h1>UniraPh</h1>
+    </div>
+    <nav class="desktop-nav">
+      <a href="UNIRAPH.html">Home</a>
+      <a href="find.html">Find Rides</a>
+      <a href="offer.html">Offer Rides</a>
+      <div class="dropdown">
+        <a href="#">More</a>
+        <div class="dropdown-content">
+          <a href="HIW.html">How it Works</a>
+          <a href="safety.html">Safety Guidelines</a>
+          <a href="faq.html">FAQ</a>
+          <a href="terms.html">Terms of Service</a>
+          <a href="privacy.html">Privacy Policy</a>
+        </div>
+      </div>
+    </nav>
+    <button id="mobileMenuButton" class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu">
+    <a href="UNIRAPH.html">Home</a>
+    <a href="find.html">Find Rides</a>
+    <a href="offer.html">Offer Rides</a>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h2>Safety Guidelines</h2>
+    <p>Follow these safety measures for a secure and comfortable ride experience.</p>
+  </section>
+
+  <!-- Content Section -->
+  <section class="about-cards">
+    <div class="about-card">
+      <i class="fas fa-seatbelt"></i>
+      <h3>Always Wear Seatbelts</h3>
+      <p>Ensure all passengers buckle up before the ride starts.</p>
+    </div>
+    <div class="about-card">
+      <i class="fas fa-id-card"></i>
+      <h3>Verify Drivers</h3>
+      <p>Check driver profiles and ratings before booking.</p>
+    </div>
+    <div class="about-card">
+      <i class="fas fa-car-crash"></i>
+      <h3>Follow Traffic Rules</h3>
+      <p>Drivers must obey traffic laws to maintain safety for everyone.</p>
+    </div>
+    <div class="about-card">
+      <i class="fas fa-head-side-mask"></i>
+      <h3>Health & Hygiene</h3>
+      <p>Wear masks if necessary and sanitize hands to prevent disease transmission.</p>
+    </div>
+  </section>
+
+  <!-- Back to Home -->
+  <div style="text-align:center; margin:2rem 0;">
+    <a href="UNIRAPH.html" class="btn-signin">← Back to Home</a>
+  </div>
+
+  <!-- Footer same as homepage -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+          <i class="fas fa-car" style="font-size:1.8rem;color:#2563eb;"></i>
+          <span style="font-weight:bold;font-size:1.3rem;color:white;">UniraPh</span>
+        </div>
+        <p>Connecting travelers for shared journeys. Save money, reduce emissions, and make new connections.</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="HIW.html">How it Works</a></li>
+          <li><a href="safety.html">Safety Guidelines</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="UNIRAPH.html">Home</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="terms.html">Terms of Service</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Connect With Us</h4>
+        <div class="socials" style="margin-bottom:1rem; display:flex; gap:0.5rem;">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="mailto:info@uniraph.com"><i class="fas fa-envelope"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 UniraPh. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    const mobileMenuBtn = document.getElementById("mobileMenuButton");
+    const mobileMenu = document.getElementById("mobileMenu");
+    mobileMenuBtn.addEventListener("click", () => mobileMenu.classList.toggle("active"));
+  </script>
+
+</body>
+</html>
