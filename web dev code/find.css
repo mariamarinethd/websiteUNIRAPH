@@ -78,17 +78,19 @@ header nav a:hover {
   display: inline-block;
 }
 
-/* Dropdown content */
+/* Dropdown content (fixed alignment) */
 .dropdown-content {
   display: none;
   position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%); /* center-align under button */
   background-color: white;
   min-width: 200px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   z-index: 100;
   border-radius: 5px;
   overflow: hidden;
-   left: -120px; /* move 50px to the left */
 }
 
 /* Dropdown links inside */
@@ -108,6 +110,7 @@ header nav a:hover {
 .dropdown:hover .dropdown-content {
   display: block;
 }
+
 
 
 /* ===================== Mobile Menu ===================== */
