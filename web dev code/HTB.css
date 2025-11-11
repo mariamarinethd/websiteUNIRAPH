@@ -45,6 +45,67 @@ header nav a.active {
   color: #fde047; /* Highlight active page */
 }
 
+/* Dropdown container */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown link */
+.dropdown > a {
+  cursor: pointer;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  display: inline-block;
+}
+
+/* Dropdown content */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 200px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  z-index: 100;
+  border-radius: 5px;
+  overflow: hidden;
+   left: -120px; /* move 50px to the left */
+}
+
+/* Dropdown links inside */
+.dropdown-content a {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: black;
+  text-decoration: none;
+}
+
+/* Hover effect */
+.dropdown-content a:hover {
+  background-color: #f0f0f0;
+}
+
+/* Show dropdown on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+
+/* ===================== Mobile Menu ===================== */
+#mobileMenu {
+  display: none;
+  background: #2563eb;
+  padding: 1rem;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+#mobileMenu a,
+#mobileMenu button {
+  color: white;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
 /* ===================== Hero Section ===================== */
 .hero {
   background: linear-gradient(to right, #f59e0b, #d97706);
