@@ -8,7 +8,7 @@ body {
 }
 a { text-decoration: none; }
 
-/* Navbar */
+/* ===================== Navbar ===================== */
 header {
   background: #2563eb;
   color: white;
@@ -18,10 +18,22 @@ header {
   align-items: center;
   position: relative;
 }
-header h1 { font-size: 1.8rem; font-weight: bold; }
-header nav { display: flex; gap: 1.5rem; align-items: center; }
-header nav a { color: white; transition: 0.2s; }
-header nav a:hover { color: #bfdbfe; }
+header h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+header nav {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+header nav a {
+  color: white;
+  transition: 0.2s;
+}
+header nav a:hover {
+  color: #bfdbfe;
+}
 .nav-buttons button {
   padding: 0.5rem 1rem;
   border: none;
@@ -34,18 +46,83 @@ header nav a:hover { color: #bfdbfe; }
   background: white;
   color: #2563eb;
 }
-.btn-signin:hover { background: #dbeafe; }
+.btn-signin:hover {
+  background: #dbeafe;
+}
 .btn-signup {
   background: #facc15;
   color: #1e3a8a;
 }
-.btn-signup:hover { background: #fde047; }
+.btn-signup:hover {
+  background: #fde047;
+}
 .mobile-menu-btn {
   display: none;
   font-size: 1.5rem;
   background: none;
   border: none;
   color: white;
+}
+
+/* Dropdown container */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown link */
+.dropdown > a {
+  cursor: pointer;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  display: inline-block;
+}
+
+/* Dropdown content */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 200px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  z-index: 100;
+  border-radius: 5px;
+  overflow: hidden;
+   left: -120px; /* move 50px to the left */
+}
+
+/* Dropdown links inside */
+.dropdown-content a {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: black;
+  text-decoration: none;
+}
+
+/* Hover effect */
+.dropdown-content a:hover {
+  background-color: #f0f0f0;
+}
+
+/* Show dropdown on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+
+/* ===================== Mobile Menu ===================== */
+#mobileMenu {
+  display: none;
+  background: #2563eb;
+  padding: 1rem;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+#mobileMenu a,
+#mobileMenu button {
+  color: white;
+  padding: 0.5rem;
+  border-radius: 5px;
 }
 
 /* Mobile Menu */
