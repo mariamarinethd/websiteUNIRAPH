@@ -4,6 +4,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const mobileMenu = document.getElementById("mobileMenu");
   mobileMenuBtn.addEventListener("click", () => mobileMenu.classList.toggle("active"));
 
+  /* =========================================================
+     RANDOM USER PUBLIC API
+  ========================================================== */
+  const randomUserContainer = document.getElementById("randomUser");
+
+  if (randomUserContainer) {
+    fetch("https://randomuser.me/api/")
+      .then(res => res.json())
+      .then(data => {
+        const user = data.results[0];
+
+        randomUserContainer.innerHTML = `
+          <div class="user-card">
+            <img src="${user.picture.large}" alt="User Picture" class="user-img">
+            <h3>${user.name.first} ${user.name.last}</h3>
+            <p>Email: ${user.email}</p>
+            <p>Country: ${user.location.country}</p>
+          </div>
+        `;
+      })
+      .catch(error => {
+        randomUserContainer.innerHTML = "<p>Failed to load user data.</p>";
+      });
+  }
+
+
   // ================= SMOOTH SCROLLING =================
   const links = document.querySelectorAll("nav a, #mobileMenu a");
   links.forEach(link => {
