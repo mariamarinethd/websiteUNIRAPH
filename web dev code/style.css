@@ -274,59 +274,6 @@ input[name="rideOption"]:checked + label {
   color: #2563eb;
 }
 
-/* ================= RANDOM USER CARD ================= */
-#randomUserSection {
-  padding: 2rem 1.5rem;
-  background: #f3f4f6;
-  text-align: center;
-}
-
-#randomUserSection h2 {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  color: #1e3a8a;
-}
-
-#randomUser {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-}
-
-.user-card {
-  background: white;
-  border-radius: 10px;
-  padding: 1rem 1.5rem;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  width: 220px;
-  transition: transform 0.2s ease;
-}
-
-.user-card:hover {
-  transform: translateY(-5px);
-}
-
-.user-img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 1rem;
-}
-
-.user-card h3 {
-  margin: 0.5rem 0;
-  font-size: 1.2rem;
-  color: #111827;
-}
-
-.user-card p {
-  margin: 0.25rem 0;
-  font-size: 0.9rem;
-  color: #4b5563;
-}
-
 /* ===================== About Section ===================== */
 .about-container {
   max-width: 1000px;
