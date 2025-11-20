@@ -4,31 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const mobileMenu = document.getElementById("mobileMenu");
   mobileMenuBtn.addEventListener("click", () => mobileMenu.classList.toggle("active"));
 
-  /* =========================================================
-     RANDOM USER PUBLIC API
-  ========================================================== */
-  const randomUserContainer = document.getElementById("randomUser");
-
-  if (randomUserContainer) {
-    fetch("https://randomuser.me/api/")
-      .then(res => res.json())
-      .then(data => {
-        const user = data.results[0];
-
-        randomUserContainer.innerHTML = `
-          <div class="user-card">
-            <img src="${user.picture.large}" alt="User Picture" class="user-img">
-            <h3>${user.name.first} ${user.name.last}</h3>
-            <p>Email: ${user.email}</p>
-            <p>Country: ${user.location.country}</p>
-          </div>
-        `;
-      })
-      .catch(error => {
-        randomUserContainer.innerHTML = "<p>Failed to load user data.</p>";
-      });
-  }
-
 
   // ================= SMOOTH SCROLLING =================
   const links = document.querySelectorAll("nav a, #mobileMenu a");
@@ -135,3 +110,25 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 });
+// ================= BOOK RIDE & GCash PAYMENT =================
+async function bookRide(ride, amount) {
+  try {
+    const response = await fetch('http://localhost:3000/create-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ride, amount })
+    });
+
+    const data = await response.json();
+
+    if(data.paymentUrl){
+      // Redirect user to GCash payment
+      window.location.href = data.paymentUrl;
+    } else {
+      alert('Failed to create payment.');
+    }
+  } catch(err) {
+    alert('Error creating payment: ' + err.message);
+  }
+}
+  
