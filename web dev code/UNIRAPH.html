@@ -8,15 +8,6 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Leaflet Map API -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
- <!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<!-- Your JS -->
-<script defer src="script.js"></script>
-
 </head>
 
 <body>
@@ -158,10 +149,14 @@
     </div>
 
     <!-- MAP -->
-    <section id="mapSection" style="padding:2rem;">
-      <h2 style="margin-bottom:1rem;">Ride Map</h2>
-      <div id="map" style="width:100%; height:400px; border-radius:10px;"></div>
-    </section>
+     <div class="container"></div>
+     <h1 style="text-align: center;">Explore our location</h1>
+     <div class="map-container">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d61956.62251642986!2d121.62344711457379!3d13.94139573105305!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33bd4b578caf4ccd%3A0x2be1e905c862fe1!2sLucena%20City%2C%20Quezon!5e0!3m2!1sen!2sph!4v1763652925928!5m2!1sen!2sph" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+           </div>
+           
+
+  
 
     <!-- Available Rides -->
     <h2 style="margin:2rem 1.5rem;font-size:1.5rem;font-weight:bold;">Available Rides</h2>
