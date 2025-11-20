@@ -6,15 +6,17 @@
   <title>UniraPh Website</title>
 
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <!-- Leaflet Map API -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-  <!-- Your JS -->
-  <script defer src="script.js"></script>
+ <!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Your JS -->
+<script defer src="script.js"></script>
+
 </head>
 
 <body>
@@ -63,34 +65,31 @@
     <button id="signUpBtnMobile" class="btn-signup">Sign Up</button>
   </div>
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-left">
-      <h2>Share Rides. Save Money. Reduce Emissions.</h2>
-      <p>Connect with fellow travelers going your way and make your journey more affordable and eco-friendly.</p>
+ <section class="hero">
+  <div class="hero-left">
+    <h2>Share Rides. Save Money. Reduce Emissions.</h2>
+    <p>Connect with fellow travelers going your way and make your journey more affordable and eco-friendly.</p>
 
-      <div class="hero-buttons">
-        <button class="primary-btn">Find a Ride</button>
-        <button class="secondary-btn">Offer a Ride</button>
+    <div class="hero-buttons">
+      <button class="primary-btn">Find a Ride</button>
+      <button class="secondary-btn">Offer a Ride</button>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="slideshow-container">
+      <div class="slide fade">
+        <img src="images/ss1.jpg" alt="Ride Image 1">
+      </div>
+      <div class="slide fade">
+        <img src="images/ss2.jpg" alt="Ride Image 2">
+      </div>
+      <div class="slide fade">
+        <img src="images/ss3.jpg" alt="Ride Image 3">
       </div>
     </div>
-
-    <div class="hero-right">
-      <div class="slideshow-container">
-        <div class="slide fade">
-          <img src="slideshow1.png" alt="Ride Image 1">
-        </div>
-
-        <div class="slide fade">
-          <img src="slide2.jpg" alt="Ride Image 2">
-        </div>
-
-        <div class="slide fade">
-          <img src="slide3.jpg" alt="Ride Image 3">
-        </div>
-      </div>
-    </div>
-  </section>
+  </div>
+</section>
 
   <main>
 
@@ -282,6 +281,32 @@
       <p>© 2025 UniraPh. All rights reserved.</p>
     </div>
   </footer>
+<!-- Sign In Modal -->
+<div id="signInModal" class="modal">
+  <div class="modal-content">
+    <button id="closeSignIn" class="close-btn">&times;</button>
+    <h2>Sign In</h2>
+    <form>
+      <input type="email" placeholder="Email" required><br><br>
+      <input type="password" placeholder="Password" required><br><br>
+      <button type="submit">Sign In</button>
+    </form>
+  </div>
+</div>
+
+<!-- Sign Up Modal -->
+<div id="signUpModal" class="modal">
+  <div class="modal-content">
+    <button id="closeSignUp" class="close-btn">&times;</button>
+    <h2>Sign Up</h2>
+    <form>
+      <input type="text" placeholder="Full Name" required><br><br>
+      <input type="email" placeholder="Email" required><br><br>
+      <input type="password" placeholder="Password" required><br><br>
+      <button type="submit">Sign Up</button>
+    </form>
+  </div>
+</div>
 
 </body>
 </html>

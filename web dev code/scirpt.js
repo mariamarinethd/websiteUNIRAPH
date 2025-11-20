@@ -2,7 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // ================= MOBILE MENU TOGGLE =================
   const mobileMenuBtn = document.getElementById("mobileMenuButton");
   const mobileMenu = document.getElementById("mobileMenu");
-  mobileMenuBtn.addEventListener("click", () => mobileMenu.classList.toggle("active"));
+  if (mobileMenuBtn && mobileMenu) {
+    mobileMenuBtn.addEventListener("click", () => mobileMenu.classList.toggle("active"));
+  }
 
   // ================= SMOOTH SCROLLING =================
   const links = document.querySelectorAll("nav a, #mobileMenu a");
@@ -19,19 +21,21 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ================= RIDE FORM TOGGLE =================
-  const findInput = document.getElementById("find");
-  const offerInput = document.getElementById("offer");
+  const findBtn = document.getElementById("findRideBtn");
+  const offerBtn = document.getElementById("offerRideBtn");
   const findForm = document.getElementById("findRideForm");
   const offerForm = document.getElementById("offerRideForm");
 
-  if (findInput && offerInput && findForm && offerForm) {
-    findInput.addEventListener("change", () => {
+  if(findBtn && offerBtn && findForm && offerForm){
+    findBtn.addEventListener("click", () => {
       findForm.style.display = "block";
       offerForm.style.display = "none";
+      findForm.scrollIntoView({ behavior: "smooth" });
     });
-    offerInput.addEventListener("change", () => {
-      findForm.style.display = "none";
+    offerBtn.addEventListener("click", () => {
       offerForm.style.display = "block";
+      findForm.style.display = "none";
+      offerForm.scrollIntoView({ behavior: "smooth" });
     });
   }
 
@@ -57,95 +61,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ================= 3-LINE DROPDOWN MENU (FIXED VERSION) =================
-  const dropdowns = document.querySelectorAll(".dropdown");
+  // ================= SLIDESHOW =================
+  let slideIndex = 0;
+  const slides = document.querySelectorAll('.slide');
 
-  dropdowns.forEach(dropdown => {
-    const toggle = dropdown.querySelector(".menu-toggle");
-    if (toggle) {
-      toggle.addEventListener("click", e => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        // FIX: Close all other dropdowns before opening this one
-        dropdowns.forEach(d => {
-          if (d !== dropdown) d.classList.remove("active");
-        });
-
-        dropdown.classList.toggle("active");
-      });
-    }
-  });
-
-  // Close dropdown if clicked outside
-  document.addEventListener("click", e => {
-    dropdowns.forEach(dropdown => {
-      if (!dropdown.contains(e.target)) {
-        dropdown.classList.remove("active");
-      }
-    });
-  });
-
-  // ================= LIKE BUTTON FUNCTIONALITY =================
-  const likeButtons = document.querySelectorAll('.like-btn');
-
-  likeButtons.forEach((btn, index) => {
-    const countSpan = btn.querySelector('.like-count');
-
-    // Load saved likes from localStorage
-    const saved = localStorage.getItem('like-' + index);
-    if (saved) {
-      countSpan.textContent = saved;
-      if (parseInt(saved) > 0) btn.classList.add('liked');
-    }
-
-    // Handle like toggle
-    btn.addEventListener('click', () => {
-      let count = parseInt(countSpan.textContent);
-      if (btn.classList.contains('liked')) {
-        btn.classList.remove('liked');
-        count--;
-      } else {
-        btn.classList.add('liked');
-        count++;
-      }
-      countSpan.textContent = count;
-      localStorage.setItem('like-' + index, count);
-    });
-  });
-});
-
-// ================= BOOK RIDE & GCash PAYMENT =================
-async function bookRide(ride, amount) {
-  try {
-    const response = await fetch('http://localhost:3000/create-payment', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ride, amount })
-    });
-
-    const data = await response.json();
-
-    if (data.paymentUrl) {
-      window.location.href = data.paymentUrl;
-    } else {
-      alert('Failed to create payment.');
-    }
-  } catch (err) {
-    alert('Error creating payment: ' + err.message);
+  function showSlides() {
+    slides.forEach(slide => slide.style.display = 'none');
+    slideIndex++;
+    if(slideIndex > slides.length) slideIndex = 1;
+    slides[slideIndex - 1].style.display = 'block';
+    setTimeout(showSlides, 3000);
   }
-}
 
-// ================= LEAFLET MAP =================
-document.addEventListener("DOMContentLoaded", function () {
-  var map = L.map("map").setView([13.9367, 121.6127], 13);
-
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19
-  }).addTo(map);
-
-  L.marker([13.9367, 121.6127])
-    .addTo(map)
-    .bindPopup("<b>Lucena City</b><br>Sample ride pickup.")
-    .openPopup();
+  if(slides.length > 0) showSlides();
 });
