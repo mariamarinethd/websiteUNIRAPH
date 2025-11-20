@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>UniraPh Website</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="find.css">
 
   <script defer src="script.js"></script>
 </head>
@@ -52,16 +51,37 @@
   </div>
 
   <!-- Hero -->
-  <section id="home" class="hero">
+  <section class="hero">
+  <div class="hero-left">
     <h2>Share Rides. Save Money. Reduce Emissions.</h2>
     <p>Connect with fellow travelers going your way and make your journey more affordable and eco-friendly.</p>
-    <div class="toggle-options">
-      <input type="radio" id="find" name="rideOption" value="find" checked hidden>
-      <label for="find"><i class="fas fa-search"></i> Find a Ride</label>
-      <input type="radio" id="offer" name="rideOption" value="offer" hidden>
-      <label for="offer"><i class="fas fa-car"></i> Offer a Ride</label>
+
+    <div class="hero-buttons">
+      <button class="primary-btn">Find a Ride</button>
+      <button class="secondary-btn">Offer a Ride</button>
     </div>
-  </section>
+  </div>
+
+ <div class="hero-right">
+  <div class="slideshow-container">
+
+    <div class="slide fade">
+      <img src="slideshow1.png" alt="Ride Image 1">
+    </div>
+
+    <div class="slide fade">
+      <img src="slide2.jpg" alt="Ride Image 2">
+    </div>
+
+    <div class="slide fade">
+      <img src="slide3.jpg" alt="Ride Image 3">
+    </div>
+
+  </div>
+</div>
+
+</section>
+
 
   <main>
     <!-- Find Ride Form -->
