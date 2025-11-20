@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const mobileMenu = document.getElementById("mobileMenu");
   mobileMenuBtn.addEventListener("click", () => mobileMenu.classList.toggle("active"));
 
-
   // ================= SMOOTH SCROLLING =================
   const links = document.querySelectorAll("nav a, #mobileMenu a");
   links.forEach(link => {
@@ -58,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ================= 3-LINE DROPDOWN MENU =================
+  // ================= 3-LINE DROPDOWN MENU (FIXED VERSION) =================
   const dropdowns = document.querySelectorAll(".dropdown");
 
   dropdowns.forEach(dropdown => {
@@ -67,6 +66,12 @@ document.addEventListener("DOMContentLoaded", () => {
       toggle.addEventListener("click", e => {
         e.preventDefault();
         e.stopPropagation();
+
+        // FIX: Close all other dropdowns before opening this one
+        dropdowns.forEach(d => {
+          if (d !== dropdown) d.classList.remove("active");
+        });
+
         dropdown.classList.toggle("active");
       });
     }
@@ -108,8 +113,8 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem('like-' + index, count);
     });
   });
-
 });
+
 // ================= BOOK RIDE & GCash PAYMENT =================
 async function bookRide(ride, amount) {
   try {
@@ -121,14 +126,26 @@ async function bookRide(ride, amount) {
 
     const data = await response.json();
 
-    if(data.paymentUrl){
-      // Redirect user to GCash payment
+    if (data.paymentUrl) {
       window.location.href = data.paymentUrl;
     } else {
       alert('Failed to create payment.');
     }
-  } catch(err) {
+  } catch (err) {
     alert('Error creating payment: ' + err.message);
   }
 }
-  
+
+// ================= LEAFLET MAP =================
+document.addEventListener("DOMContentLoaded", function () {
+  var map = L.map("map").setView([13.9367, 121.6127], 13);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19
+  }).addTo(map);
+
+  L.marker([13.9367, 121.6127])
+    .addTo(map)
+    .bindPopup("<b>Lucena City</b><br>Sample ride pickup.")
+    .openPopup();
+});

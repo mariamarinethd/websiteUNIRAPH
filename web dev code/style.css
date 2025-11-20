@@ -494,3 +494,19 @@ footer a:hover {
     display: flex;
   }
 }
+
+/* Dropdown content */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 200px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  z-index: 100;
+  border-radius: 5px;
+  overflow: hidden;
+
+  /* FIX TO PREVENT GETTING CUT OFF */
+  right: 0;     /* NEW */
+  left: auto;   /* NEW - overrides old left value */
+}
