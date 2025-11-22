@@ -4,8 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Move It Booking Booths | UniraPh</title>
+
+  <!-- FONT AWESOME -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <link rel="stylesheet" href="style.css">
-  
+  <script defer src="script.js"></script>
+
 </head>
 <body>
 
@@ -15,27 +20,29 @@
       <i class="fas fa-car" style="margin-right:10px;font-size:1.8rem;color:white;"></i>
       <h1>UniraPh</h1>
     </div>
+
     <nav class="desktop-nav">
       <a href="UNIRAPH.html">Home</a>
       <a href="find.html">Find Rides</a>
       <a href="offer.html">Offer Rides</a>
-  </header>
-  
-    </nav>
-    <button id="mobileMenuButton" class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
-  </header>
-</head>
 
-<div class="dropdown">
-  <a href="#">More</a>
-  <div class="dropdown-content">
-    <a href="HIW.html">How it Works</a>
-    <a href="MIB.html">Move It Booking Booths</a>
-    <a href="HTB.html">How to Booking</a>
-    <a href="TAC.html">Terms and Conditions</a>
-    <a href="ES.html">Express Saver by UniraPh</a>
-  </div>
-</div>
+      <!-- ⭐ FIXED: More button placed beside Offer Rides -->
+      <div class="dropdown">
+        <a href="#">More</a>
+        <div class="dropdown-content">
+          <a href="HIW.html">How it Works</a>
+          <a href="MIB.html">Move It Booking Booths</a>
+          <a href="HTB.html">How to Booking</a>
+          <a href="TAC.html">Terms and Conditions</a>
+          <a href="ES.html">Express Saver by UniraPh</a>
+        </div>
+      </div>
+    </nav>
+
+    <button id="mobileMenuButton" class="mobile-menu-btn">
+      <i class="fas fa-bars"></i>
+    </button>
+  </header>
 
 
   <!-- Hero Section -->
@@ -51,11 +58,13 @@
       <h3>Multiple Locations</h3>
       <p>Our booths are located at key spots to make booking accessible everywhere.</p>
     </div>
+
     <div class="about-card">
       <i class="fas fa-clock"></i>
       <h3>Fast Booking</h3>
       <p>Reserve your rides in just a few minutes directly at the booth.</p>
     </div>
+
     <div class="about-card">
       <i class="fas fa-mobile-alt"></i>
       <h3>Mobile Integration</h3>

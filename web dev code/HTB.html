@@ -4,80 +4,103 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>How to Booking | UniraPh</title>
+
   <link rel="stylesheet" href="style.css">
-  
+  <script defer src="script.js"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
 
-  <!-- Navbar -->
-  <header>
-    <div class="flex items-center">
-      <i class="fas fa-car" style="margin-right:10px;font-size:1.8rem;color:white;"></i>
-      <h1>UniraPh</h1>
-    </div>
-    <nav class="desktop-nav">
-      <a href="UNIRAPH.html">Home</a>
-      <a href="find.html">Find Rides</a>
-      <a href="offer.html">Offer Rides</a>
-    </nav>
-  </header>
-
-  <div class="dropdown">
-  <a href="#">More</a>
-  <div class="dropdown-content">
-    <a href="HIW.html">How it Works</a>
-    <a href="MIB.html">Move It Booking Booths</a>
-    <a href="HTB.html">How to Booking</a>
-    <a href="TAC.html">Terms and Conditions</a>
-    <a href="ES.html">Express Saver by UniraPh</a>
+<!-- ========================= HEADER ========================= -->
+<header>
+  <div class="flex items-center">
+    <i class="fas fa-car" style="margin-right:10px;font-size:1.8rem;color:white;"></i>
+    <h1>UniraPh</h1>
   </div>
+
+  <nav class="desktop-nav">
+    <a href="UNIRAPH.html">Home</a>
+    <a href="find.html">Find Rides</a>
+    <a href="offer.html">Offer Rides</a>
+
+    <!-- ✔ FIXED More Dropdown -->
+    <div class="dropdown">
+      <a href="#" class="more-btn">More</a>
+      <div class="dropdown-content">
+        <a href="HIW.html">How it Works</a>
+        <a href="MIB.html">Move It Booking Booths</a>
+        <a href="HTB.html">How to Booking</a>
+        <a href="TAC.html">Terms and Conditions</a>
+        <a href="ES.html">Express Saver by UniraPh</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu Button -->
+  <button id="mobileMenuButton" class="mobile-menu-btn">
+    <i class="fas fa-bars"></i>
+  </button>
+</header>
+
+<!-- ========================= MOBILE MENU ========================= -->
+<div id="mobileMenu">
+  <a href="UNIRAPH.html">Home</a>
+  <a href="find.html">Find Rides</a>
+  <a href="offer.html">Offer Rides</a>
+  <a href="HIW.html">How it Works</a>
+  <a href="MIB.html">Move It Booking Booths</a>
+  <a href="HTB.html">How to Booking</a>
+  <a href="TAC.html">Terms and Conditions</a>
+  <a href="ES.html">Express Saver</a>
 </div>
 
+<!-- ========================= HERO SECTION ========================= -->
+<section class="hero">
+  <h2>How to Booking</h2>
+  <p>Step-by-step guide to booking your ride with UniraPh quickly and safely.</p>
+</section>
 
-    </nav>
-    <button id="mobileMenuButton" class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
-  </header>
-</head>
-
-  <!-- Hero Section -->
-  <section class="hero">
-    <h2>How to Booking</h2>
-    <p>Step-by-step guide to booking your ride with UniraPh quickly and safely.</p>
-  </section>
-
-  <!-- Steps Section -->
-  <section class="about-cards">
-    <div class="about-card">
-      <i class="fas fa-search"></i>
-      <h3>Step 1: Find a Ride</h3>
-      <p>Search for rides by entering your starting point, destination, and travel date.</p>
-    </div>
-    <div class="about-card">
-      <i class="fas fa-user-check"></i>
-      <h3>Step 2: Connect with Driver</h3>
-      <p>Choose a verified driver and communicate through the app to confirm details.</p>
-    </div>
-    <div class="about-card">
-      <i class="fas fa-credit-card"></i>
-      <h3>Step 3: Secure Payment</h3>
-      <p>Pay securely through the platform or directly to the driver as per your choice.</p>
-    </div>
-    <div class="about-card">
-      <i class="fas fa-car-side"></i>
-      <h3>Step 4: Enjoy Your Ride</h3>
-      <p>Meet your driver, board safely, and enjoy a comfortable journey.</p>
-    </div>
-  </section>
-
-  <!-- Back to Home -->
-  <div style="text-align:center; margin:2rem 0;">
-    <a href="UNIRAPH.html" class="btn-signin">← Back to Home</a>
+<!-- ========================= STEPS SECTION ========================= -->
+<section class="about-cards">
+  <div class="about-card">
+    <i class="fas fa-search"></i>
+    <h3>Step 1: Find a Ride</h3>
+    <p>Search for rides by entering your starting point, destination, and travel date.</p>
   </div>
 
-  <!-- Footer -->
-  <footer>
-    <p>© 2025 UniraPh. All rights reserved.</p>
-  </footer>
+  <div class="about-card">
+    <i class="fas fa-user-check"></i>
+    <h3>Step 2: Connect with Driver</h3>
+    <p>Choose a verified driver and communicate through the app to confirm details.</p>
+  </div>
+
+  <div class="about-card">
+    <i class="fas fa-credit-card"></i>
+    <h3>Step 3: Secure Payment</h3>
+    <p>Pay securely through the platform or directly to the driver as per your preference.</p>
+  </div>
+
+  <div class="about-card">
+    <i class="fas fa-car-side"></i>
+    <h3>Step 4: Enjoy Your Ride</h3>
+    <p>Meet your driver, board safely, and enjoy a comfortable journey.</p>
+  </div>
+</section>
+
+<!-- ========================= BACK BUTTON ========================= -->
+<div style="text-align:center; margin:2rem 0;">
+  <a href="UNIRAPH.html" class="btn-signin">← Back to Home</a>
+</div>
+
+<!-- ========================= FOOTER ========================= -->
+<footer>
+  <p>© 2025 UniraPh. All rights reserved.</p>
+</footer>
 
 </body>
 </html>
+  
