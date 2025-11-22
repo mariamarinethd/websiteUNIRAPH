@@ -1,3 +1,19 @@
+// ================= LOGIN CHECK =================
+// Prevent access without login
+if (!localStorage.getItem('loggedIn')) {
+  window.location.href = 'index.html'; // redirect to login page
+}
+
+// Optional: SIGN OUT BUTTON FUNCTIONALITY
+const signOutBtns = document.querySelectorAll('.btn-signin, .btn-signup'); // replace with your logout button if you add one
+signOutBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    localStorage.removeItem('loggedIn');
+    window.location.href = 'index.html';
+  });
+});
+
+// ================= DOM CONTENT LOADED =================
 document.addEventListener("DOMContentLoaded", () => {
   // ================= MOBILE MENU TOGGLE =================
   const mobileMenuBtn = document.getElementById("mobileMenuButton");
