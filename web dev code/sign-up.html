@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniraPh Website</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <div class="flex items-center">
+      <i class="fas fa-car" style="margin-right:10px;font-size:1.8rem;"></i>
+      <h1>UniraPh</h1>
+    </div>
+
+    <nav class="desktop-nav">
+      <a href="UNIRAPH.html">Home</a>
+      <a href="find.html">Find Rides</a>
+      <a href="offer.html">Offer Rides</a>
+      <a href="#aboutSection">About</a>
+
+      <!-- FIXED DROPDOWN -->
+      <div class="dropdown">
+        <a href="#">More</a>
+        <div class="dropdown-content">
+          <a href="HIW.html">How it Works</a>
+          <a href="MIB.html">Move It Booking Booths</a>
+          <a href="HTB.html">How to Booking</a>
+          <a href="TAC.html">Terms and Conditions</a>
+          <a href="ES.html">Express Saver by UniraPh</a>
+        </div>
+      </div>
+
+ <div class="nav-buttons">
+  <a href="sign-in.html"><button class="btn-signin">Sign In</button></a>
+  <a href="sign-up.html"><button class="btn-signup">Sign Up</button></a>
+</div>
+
+    </nav>
+
+    <button id="mobileMenuButton" class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+  </header>
+
+<!-- SIGN UP SECTION -->
+<section class="auth-section">
+    <div class="auth-box">
+        <h2>Create Your Account</h2>
+        <p class="auth-subtext">Join UNIRAPH and take part in our community.</p>
+
+        <form class="auth-form">
+            <label>Full Name</label>
+            <input type="text" placeholder="Enter your name" required>
+
+            <label>Email</label>
+            <input type="email" placeholder="Enter your email" required>
+
+            <label>Password</label>
+            <input type="password" placeholder="Create a password" required>
+
+            <label>Confirm Password</label>
+            <input type="password" placeholder="Re-enter your password" required>
+
+            <button type="submit" class="auth-btn">Sign Up</button>
+        </form>
+
+        <p class="switch-text">
+            Already have an account?
+            <a href="sign-in.html">Sign In</a>
+        </p>
+    </div>
+</section>
+
+</body>
+</html>
