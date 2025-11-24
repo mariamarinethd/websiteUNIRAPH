@@ -12,44 +12,53 @@
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+<style>
+    main { padding: 2rem; }
+    .driver-card {
+      background:white; padding:1rem; margin-bottom:1rem;
+      border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.2);
+    }
+    .driver-card h4 { margin:0 0 0.5rem 0; }
+    .driver-card a { margin-right:1rem; color:#2563eb; font-weight:bold; }
+  </style>
 <body>
 
 <!-- HEADER -->
-<header>
-  <div class="flex items-center">
-    <i class="fas fa-car" style="margin-right:10px;font-size:1.8rem;"></i>
-    <h1>UniraPh</h1>
-  </div>
-
-  <nav class="desktop-nav">
-    <a href="UNIRAPH.html">Home</a>
-    <a href="find.html">Find Rides</a>
-    <a href="offer.html">Offer Rides</a>
-
-    <!-- ✔ More Dropdown INSIDE nav -->
-    <div class="dropdown">
-      <a class="more-btn" href="#">More</a>
-      <div class="dropdown-content">
-        <a href="HIW.html">How it Works</a>
-        <a href="MIB.html">Move It Booking Booths</a>
-        <a href="HTB.html">How to Booking</a>
-        <a href="TAC.html">Terms and Conditions</a>
-        <a href="ES.html">Express Saver by UniraPh</a>
-      </div>
+  <header>
+    <div class="flex items-center">
+      <i class="fas fa-car" style="margin-right:10px;font-size:1.8rem;color:white;"></i>
+      <h1 style="color:white;">UniraPh</h1>
     </div>
 
-    <!-- RIGHT BUTTONS -->
-     <div class="nav-buttons">
-  <a href="sign-in.html"><button class="btn-signin">Sign In</button></a>
-  <a href="sign-up.html"><button class="btn-signup">Sign Up</button></a>
-</div>
-  </nav>
+    <nav class="desktop-nav">
+      <a href="UNIRAPH.html" style="color:white;">Home</a>
+      <a href="find.html" style="color:white;">Find Rides</a>
+      <a href="availabledriver.html" style="color:white;">Available Driver</a>
 
-  <!-- Mobile Menu Button -->
-  <button id="mobileMenuButton" class="mobile-menu-btn">
-    <i class="fas fa-bars"></i>
-  </button>
-</header>
+      <div class="dropdown">
+        <a class="more-btn" href="#" style="color:white;">More</a>
+        <div class="dropdown-content">
+          <a href="HIW.html">How it Works</a>
+          <a href="MIB.html">Move It Booking Booths</a>
+          <a href="HTB.html">How to Booking</a>
+          <a href="TAC.html">Terms and Conditions</a>
+          <a href="ES.html">Express Saver by UniraPh</a>
+        </div>
+      </div>
+
+      <div class="dropdown">
+        <button class="btn-signup">Sign Up</button>
+        <div class="dropdown-content">
+          <a href="sign-incom.html">Sign Up as Commuter</a>
+          <a href="sign-upD.html">Sign Up as Driver</a>
+        </div>
+      </div>
+
+      <button id="mobileMenuButton" class="mobile-menu-btn">
+        <i class="fas fa-bars" style="color:white;"></i>
+      </button>
+    </nav>
+  </header>
 
 <!-- MOBILE MENU -->
 <div id="mobileMenu">
@@ -66,64 +75,20 @@
 </div>
 
 
-<!-- MAIN -->
-<main style="padding:4rem 1.5rem; background:#f8fafc;">
-  <div id="findRideForm" class="form-box">
-    <h3>Find Your Perfect Ride</h3>
+<body>
+  <header>
+    <h1>Available Drivers</h1>
+    <p>Contact drivers directly to book a ride</p>
+  </header>
+  <main id="driverList">
+    <p>Loading drivers...</p>
+  </main>
 
-    <form class="form-grid form-grid-4">
-      <div>
-        <label>From</label>
-        <input type="text" placeholder="Starting location" required>
-      </div>
-
-      <div>
-        <label>To</label>
-        <input type="text" placeholder="Destination" required>
-      </div>
-
-      <div>
-        <label>Date</label>
-        <input type="date" required>
-      </div>
-
-      <div>
-        <button type="submit">Search Rides</button>
-      </div>
-    </form>
-  </div>
-
-  <h1 style="text-align: center;">Explore our locations</h1>
+ <!-- MAP -->
+     <h1 style="text-align: center;">Explore our locations</h1>
      <div class="map-container">
       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d61956.62251642986!2d121.62344711457379!3d13.94139573105305!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33bd4b578caf4ccd%3A0x2be1e905c862fe1!2sLucena%20City%2C%20Quezon!5e0!3m2!1sen!2sph!4v1763652925928!5m2!1sen!2sph" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
            </div>
-
-  <!-- Example Results -->
-  <h2 style="margin:2rem 0;font-size:1.5rem;font-weight:bold;">
-    Available Rides
-  </h2>
-
-  <div class="cards">
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;">
-        <h3>Lucena City to Pagbilao</h3>
-        <span class="badge badge-green">Verified</span>
-      </div>
-
-      <p><i class="fas fa-calendar-day"></i> Morning trip (7–8 AM)</p>
-      <p><i class="fas fa-user"></i> Mark R. - Toyota Vios</p>
-      <p><i class="fas fa-users"></i> 3 seats available</p>
-
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <span class="price">₱80</span>
-        <button>Book Now</button>
-      </div>
-    </div>
-  </div>
-   
-  
-</main>
-
 
 <!-- FOOTER -->
 <footer>
@@ -182,6 +147,32 @@
     <p>© 2025 UniraPh. All rights reserved.</p>
   </div>
 </footer>
+
+  <script>
+    const drivers = JSON.parse(localStorage.getItem('drivers') || '[]');
+    const driverList = document.getElementById('driverList');
+    driverList.innerHTML = '';
+
+    if(drivers.length === 0){
+      driverList.innerHTML = '<p>No drivers available currently.</p>';
+    } else {
+      drivers.forEach(driver => {
+        const card = document.createElement('div');
+        card.className = 'driver-card';
+        card.innerHTML = `
+          <h4>${driver.name} | ${driver.vehicle} | ${driver.plate}</h4>
+          <p>Location: ${driver.location}</p>
+          <p>Availability: ${driver.availability}</p>
+          <p>Notes: ${driver.notes || 'None'}</p>
+          <p>
+            <a href="tel:${driver.contact}"><i class="fas fa-phone"></i> Call</a>
+            <a href="sms:${driver.contact}"><i class="fas fa-comment"></i> Text</a>
+          </p>
+        `;
+        driverList.appendChild(card);
+      });
+    }
+  </script>
 
 </body>
 </html>

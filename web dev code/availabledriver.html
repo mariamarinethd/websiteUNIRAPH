@@ -7,8 +7,6 @@
 
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
-
-  <!-- Font Awesome -->
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -52,6 +50,31 @@
       color: white;
       padding: 2rem 1.5rem;
     }
+
+    /* Driver info card styling */
+    .driver-card {
+      margin-top: 2rem;
+      padding: 1rem 1.5rem;
+      background-color: #2563eb;
+      color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    }
+
+    .driver-card button {
+      background-color: #1e40af;
+      color: white;
+      border: none;
+      padding: 0.8rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .driver-card p {
+      margin: 0.3rem 0;
+    }
+
   </style>
 </head>
 <body>
@@ -83,15 +106,18 @@
         </div>
       </div>
 
-      <div class="nav-buttons">
-        <a href="sign-in.html"><button class="btn-signin">Sign In</button></a>
-        <a href="sign-up.html"><button class="btn-signup">Sign Up</button></a>
+      <div class="dropdown">
+        <button class="btn-signup">Sign Up</button>
+        <div class="dropdown-content">
+          <a href="sign-incom.html">Sign Up as Commuter</a>
+          <a href="sign-upD.html">Sign Up as Driver</a>
+        </div>
       </div>
-    </nav>
 
-    <button id="mobileMenuButton" class="mobile-menu-btn">
-      <i class="fas fa-bars" style="color:white;"></i>
-    </button>
+      <button id="mobileMenuButton" class="mobile-menu-btn">
+        <i class="fas fa-bars" style="color:white;"></i>
+      </button>
+    </nav>
   </header>
 
   <!-- MOBILE MENU -->
@@ -161,6 +187,10 @@
         </div>
 
       </form>
+
+      <!-- Display submitted info -->
+      <div id="driverInfoDisplay" class="driver-card"></div>
+
     </div>
   </main>
 
@@ -202,12 +232,6 @@
           <a href="mailto:info@uniraph.com"><i class="fas fa-envelope" style="font-size:1.2rem;color:white;"></i></a>
           <a href="#"><i class="fab fa-linkedin-in" style="font-size:1.2rem;color:white;"></i></a>
         </div>
-
-        <h5>Download Our App</h5>
-        <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
-          <button style="background:black;color:white;padding:0.5rem 1rem;border-radius:5px;">App Store</button>
-          <button style="background:black;color:white;padding:0.5rem 1rem;border-radius:5px;">Google Play</button>
-        </div>
       </div>
     </div>
 
@@ -215,6 +239,34 @@
       <p>© 2025 UniraPh. All rights reserved.</p>
     </div>
   </footer>
+
+  <!-- Script to display driver info -->
+  <script>
+    const driverForm = document.querySelector('#availableDriverForm form');
+    const displayDiv = document.getElementById('driverInfoDisplay');
+
+    driverForm.addEventListener('submit', function(e){
+      e.preventDefault(); // prevent actual submission
+
+      const name = driverForm.querySelector('input[placeholder="e.g., Juan Dela Cruz"]').value;
+      const contact = driverForm.querySelector('input[placeholder="09xxxxxxxxx"]').value;
+      const vehicle = driverForm.querySelector('select').value;
+      const plate = driverForm.querySelector('input[placeholder="ABC-1234"]').value;
+      const location = driverForm.querySelector('input[placeholder="City or exact area"]').value;
+      const availability = driverForm.querySelector('input[type="datetime-local"]').value;
+      const notes = driverForm.querySelector('textarea').value;
+
+      displayDiv.innerHTML = `
+        <h3>Your Driver Info:</h3>
+        <button>${name} | ${vehicle} | ${plate} | Available: ${availability}</button>
+        <p>Contact: ${contact}</p>
+        <p>Location: ${location}</p>
+        <p>Notes: ${notes}</p>
+      `;
+
+      driverForm.reset();
+    });
+  </script>
 
 </body>
 </html>
