@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rider Profile</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #74ebd5, #acb6e5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .profile-card {
+      background-color: #fff;
+      width: 350px;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .profile-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 45px rgba(0,0,0,0.3);
+    }
+
+    .profile-card img {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #74ebd5;
+      margin-bottom: 15px;
+    }
+
+    .profile-card h2 {
+      margin: 10px 0 5px;
+      font-size: 26px;
+      color: #333;
+    }
+
+    .profile-card p {
+      margin: 5px 0;
+      color: #777;
+      font-size: 14px;
+    }
+
+    .profile-card .info {
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    .profile-card .info div {
+      margin-bottom: 10px;
+      font-size: 15px;
+      color: #555;
+    }
+
+    .profile-card .info div span {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .edit-btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #74ebd5;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .edit-btn:hover {
+      background-color: #67d4c0;
+    }
+  </style>
+</head>
+<body>
+  <div class="profile-card">
+    <img src="https://via.placeholder.com/130" alt="Rider Photo">
+    <h2>David Serdena</h2>
+    <p>Rider</p>
+
+    <div class="info">
+      <div><span>Age:</span> 22</div>
+      <div><span>Contact:</span> +63 912 345 6789</div>
+      <div><span>Email:</span> david@example.com</div>
+      <div><span>Location:</span> Lucena City </div>
+      <div><span>Joined:</span> November 2025</div>
+    </div>
+
+    <button class="edit-btn">Edit Profile</button>
+  </div>
+</body>
+</html>
