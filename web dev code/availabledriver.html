@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Available Driver - UniraPh</title>
+
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* Full-page background image */
+    .bg-img {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -2;
+    }
+
+    /* Overlay for readability */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: -1;
+    }
+
+    main {
+      padding: 4rem 1.5rem;
+    }
+
+    .form-box {
+      background-color: rgba(255,255,255,0.9);
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    footer {
+      background-color: rgba(0,0,0,0.7);
+      color: white;
+      padding: 2rem 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Image -->
+  <img src="images/OBG.png" alt="Background Car" class="bg-img">
+  <div class="overlay"></div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="flex items-center">
+      <i class="fas fa-car" style="margin-right:10px;font-size:1.8rem;color:white;"></i>
+      <h1 style="color:white;">UniraPh</h1>
+    </div>
+
+    <nav class="desktop-nav">
+      <a href="UNIRAPH.html" style="color:white;">Home</a>
+      <a href="find.html" style="color:white;">Find Rides</a>
+      <a href="offer.html" style="color:white;">Available Driver</a>
+
+      <div class="dropdown">
+        <a class="more-btn" href="#" style="color:white;">More</a>
+        <div class="dropdown-content">
+          <a href="HIW.html">How it Works</a>
+          <a href="MIB.html">Move It Booking Booths</a>
+          <a href="HTB.html">How to Booking</a>
+          <a href="TAC.html">Terms and Conditions</a>
+          <a href="ES.html">Express Saver by UniraPh</a>
+        </div>
+      </div>
+
+      <div class="nav-buttons">
+        <a href="sign-in.html"><button class="btn-signin">Sign In</button></a>
+        <a href="sign-up.html"><button class="btn-signup">Sign Up</button></a>
+      </div>
+    </nav>
+
+    <button id="mobileMenuButton" class="mobile-menu-btn">
+      <i class="fas fa-bars" style="color:white;"></i>
+    </button>
+  </header>
+
+  <!-- MOBILE MENU -->
+  <div id="mobileMenu">
+    <a href="UNIRAPH.html">Home</a>
+    <a href="find.html">Find Rides</a>
+    <a href="offer.html">Available Driver</a>
+    <a href="HIW.html">How it Works</a>
+    <a href="MIB.html">Move It Booking Booths</a>
+    <a href="HTB.html">How to Booking</a>
+    <a href="TAC.html">Terms and Conditions</a>
+    <a href="ES.html">Express Saver</a>
+    <button id="signInBtnMobile" class="btn-signin">Sign In</button>
+    <button id="signUpBtnMobile" class="btn-signup">Sign Up</button>
+  </div>
+
+  <!-- AVAILABLE DRIVER FORM -->
+  <main>
+    <div id="availableDriverForm" class="form-box">
+      <h3 style="color:#000;">Available Driver</h3>
+
+      <form class="form-grid form-grid-2">
+
+        <div>
+          <label>Driver Name</label>
+          <input type="text" placeholder="e.g., Juan Dela Cruz" required>
+        </div>
+
+        <div>
+          <label>Contact Number</label>
+          <input type="text" placeholder="09xxxxxxxxx" required>
+        </div>
+
+        <div>
+          <label>Type of Vehicle</label>
+          <select>
+            <option>Motorcycle</option>
+            <option>Tricycle</option>
+            <option>Car</option>
+            <option>Van</option>
+            <option>Electric Vehicle</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Plate Number</label>
+          <input type="text" placeholder="ABC-1234" required>
+        </div>
+
+        <div>
+          <label>Driver Location</label>
+          <input type="text" placeholder="City or exact area" required>
+        </div>
+
+        <div>
+          <label>Availability</label>
+          <input type="datetime-local" required>
+        </div>
+
+        <div class="form-grid-2" style="grid-column: span 2;">
+          <label>Additional Notes</label>
+          <textarea rows="3" placeholder="Any important details..."></textarea>
+        </div>
+
+        <div style="grid-column: span 2;">
+          <button type="submit">Submit Driver Info</button>
+        </div>
+
+      </form>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+          <i class="fas fa-car" style="font-size:1.8rem;color:#2563eb;"></i>
+          <span style="font-weight:bold;font-size:1.3rem;color:white;">UniraPh</span>
+        </div>
+        <p>Connecting travelers for shared journeys. Save money, reduce emissions, and make new connections.</p>
+      </div>
+
+      <div>
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="SAG.html" style="color:white;">Safety Guidelines</a></li>
+          <li><a href="FAQ.html" style="color:white;">FAQ</a></li>
+          <li><a href="#" style="color:white;">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="TAS.html" style="color:white;">Terms of Service</a></li>
+          <li><a href="p-policy.html" style="color:white;">Privacy Policy</a></li>
+          <li><a href="c-policy.html" style="color:white;">Cookie Policy</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Connect With Us</h4>
+        <div class="socials" style="margin-bottom:1rem; display:flex; gap:0.5rem;">
+          <a href="#"><i class="fab fa-facebook-f" style="font-size:1.2rem;color:white;"></i></a>
+          <a href="#"><i class="fab fa-twitter" style="font-size:1.2rem;color:white;"></i></a>
+          <a href="#"><i class="fab fa-instagram" style="font-size:1.2rem;color:white;"></i></a>
+          <a href="mailto:info@uniraph.com"><i class="fas fa-envelope" style="font-size:1.2rem;color:white;"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in" style="font-size:1.2rem;color:white;"></i></a>
+        </div>
+
+        <h5>Download Our App</h5>
+        <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
+          <button style="background:black;color:white;padding:0.5rem 1rem;border-radius:5px;">App Store</button>
+          <button style="background:black;color:white;padding:0.5rem 1rem;border-radius:5px;">Google Play</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 UniraPh. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

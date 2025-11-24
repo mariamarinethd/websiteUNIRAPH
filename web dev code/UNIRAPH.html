@@ -6,7 +6,9 @@
   <title>UniraPh Website</title>
 
   <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
 
 </head>
 
@@ -22,7 +24,7 @@
     <nav class="desktop-nav">
       <a href="UNIRAPH.html">Home</a>
       <a href="find.html">Find Rides</a>
-      <a href="offer.html">Offer Rides</a>
+      <a href="availabledriver.html">Available Driver</a>
       <a href="#aboutSection">About</a>
 
       <!-- FIXED DROPDOWN -->
@@ -37,10 +39,14 @@
         </div>
       </div>
 
- <div class="nav-buttons">
-  <a href="sign-in.html"><button class="btn-signin">Sign In</button></a>
-  <a href="sign-up.html"><button class="btn-signup">Sign Up</button></a>
+<div class="dropdown">
+  <button class="btn-signup">Sign Up</button>
+  <div class="dropdown-content">
+    <a href="sign-in.html">Sign Up as Commuter</a>
+    <a href="sign-up.html">Sign Up as Driver</a>
+  </div>
 </div>
+
 
     </nav>
 
@@ -51,7 +57,7 @@
   <div id="mobileMenu">
     <a href="#home">Home</a>
     <a href="#findRideForm">Find Rides</a>
-    <a href="#offerRideForm">Offer Rides</a>
+    <a href="#availabledriverForm">Available Driver</a>
     <a href="#aboutSection">About</a>
     <button id="signInBtnMobile" class="btn-signin">Sign In</button>
     <button id="signUpBtnMobile" class="btn-signup">Sign Up</button>
@@ -154,55 +160,6 @@
      <div class="map-container">
       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d61956.62251642986!2d121.62344711457379!3d13.94139573105305!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33bd4b578caf4ccd%3A0x2be1e905c862fe1!2sLucena%20City%2C%20Quezon!5e0!3m2!1sen!2sph!4v1763652925928!5m2!1sen!2sph" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
            </div>
-           
-
-
-
-    <!-- Available Rides -->
-    <h2 style="margin:2rem 1.5rem;font-size:1.5rem;font-weight:bold;">Available Rides</h2>
-    <div class="cards" style="padding:0 1.5rem;">
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;">
-          <h3>Lucena City to Pagbilao</h3>
-          <span class="badge badge-green">Verified</span>
-        </div>
-        <p><i class="fas fa-calendar-day"></i> Morning trip (7–8 AM)</p>
-        <p><i class="fas fa-user"></i> Mark R. - Toyota Vios</p>
-        <p><i class="fas fa-users"></i> 3 seats available</p>
-        <div style="display:flex;justify-content:space-between;">
-          <span class="price">₱80</span>
-          <button>Book Now</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;">
-          <h3>Lucena City to Tayabas</h3>
-          <span class="badge badge-blue">New</span>
-        </div>
-        <p><i class="fas fa-calendar-day"></i> Mid day (10–11 AM)</p>
-        <p><i class="fas fa-user"></i> Reynaldo P. - Mitsubishi Expander</p>
-        <p><i class="fas fa-users"></i> 5 seats available</p>
-        <div style="display:flex;justify-content:space-between;">
-          <span class="price">₱60</span>
-          <button>Book Now</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;">
-          <h3>Lucena City to Sariaya</h3>
-          <span class="badge badge-yellow">Popular</span>
-        </div>
-        <p><i class="fas fa-calendar-day"></i> Afternoon (1–2 PM)</p>
-        <p><i class="fas fa-user"></i> Julius D. - Hyundai Accent</p>
-        <p><i class="fas fa-users"></i> 1 seat available</p>
-        <div style="display:flex;justify-content:space-between;">
-          <span class="price">₱100</span>
-          <button>Book Now</button>
-        </div>
-      </div>
-    </div>
 
     <!-- ABOUT -->
     <section id="aboutSection" style="padding:4rem 1.5rem; background:#e0f2fe;">
