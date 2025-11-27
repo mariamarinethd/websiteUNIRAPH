@@ -11,6 +11,8 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
+    /* Restore original visual design for driversite */
+
     /* Full-page background image */
     .bg-img {
       position: fixed;
@@ -38,27 +40,63 @@
     }
 
     .form-box {
-      background-color: rgba(255,255,255,0.9);
+      background-color: rgba(255,255,255,0.95);
       padding: 2rem;
       border-radius: 10px;
-      max-width: 800px;
+      max-width: 900px;
       margin: auto;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
     }
 
-    footer {
-      background-color: rgba(0,0,0,0.7);
+    .form-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form-grid .form-grid-2 {
+      grid-column: span 2;
+    }
+
+    label {
+      display:block;
+      font-weight:600;
+      margin-bottom:0.35rem;
+      color:#0f172a;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="datetime-local"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      box-sizing: border-box;
+      font-size: 0.95rem;
+    }
+
+    button[type="submit"] {
+      background: #2563eb;
       color: white;
-      padding: 2rem 1.5rem;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
     }
 
-    /* Driver info card styling */
+    /* Driver info card styling (keeps original design) */
     .driver-card {
       margin-top: 2rem;
       padding: 1rem 1.5rem;
       background-color: #2563eb;
       color: white;
       border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.12);
     }
 
     .driver-card button {
@@ -75,6 +113,13 @@
       margin: 0.3rem 0;
     }
 
+    /* Small responsive adjustments */
+    @media (max-width: 720px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-box { padding: 1.25rem; }
+    }
   </style>
 </head>
 <body>
@@ -107,13 +152,13 @@
         </div>
       </div>
 
-    <div class="dropdown">
-  <button class="btn-signup">For Drivers</button>
-  <div class="dropdown-content">
-    <a href="sign-upD.html">Sign Up as Driver</a>
-    <a href="sign-incom.html">Sign In</a>
-  </div>
-</div>
+      <div class="dropdown">
+        <button class="btn-signup">For Drivers</button>
+        <div class="dropdown-content">
+          <a href="sign-upD.html">Sign Up as Driver</a>
+          <a href="sign-incom.html">Sign In</a>
+        </div>
+      </div>
 
       <button id="mobileMenuButton" class="mobile-menu-btn">
         <i class="fas fa-bars" style="color:white;"></i>
@@ -138,23 +183,24 @@
   <!-- AVAILABLE DRIVER FORM -->
   <main>
     <div id="availableDriverForm" class="form-box">
-      <h3 style="color:#000;">Available Driver</h3>
+      <h3 style="color:#0f172a;margin-top:0;">Available Driver</h3>
 
-      <form class="form-grid form-grid-2">
+      <!-- Restored design: two-column grid like original, but inputs have ids so logic works -->
+      <form id="driverForm" class="form-grid form-grid-2" autocomplete="off">
 
         <div>
-          <label>Driver Name</label>
-          <input type="text" placeholder="e.g., Juan Dela Cruz" required>
+          <label for="driverName">Driver Name</label>
+          <input id="driverName" name="driverName" type="text" placeholder="e.g., Juan Dela Cruz" required>
         </div>
 
         <div>
-          <label>Contact Number</label>
-          <input type="text" placeholder="09xxxxxxxxx" required>
+          <label for="driverContact">Contact Number</label>
+          <input id="driverContact" name="driverContact" type="text" placeholder="09xxxxxxxxx" required>
         </div>
 
         <div>
-          <label>Type of Vehicle</label>
-          <select>
+          <label for="driverVehicle">Type of Vehicle</label>
+          <select id="driverVehicle" name="driverVehicle">
             <option>Motorcycle</option>
             <option>Tricycle</option>
             <option>Car</option>
@@ -164,33 +210,44 @@
         </div>
 
         <div>
-          <label>Plate Number</label>
-          <input type="text" placeholder="ABC-1234" required>
+          <label for="driverPlate">Plate Number</label>
+          <input id="driverPlate" name="driverPlate" type="text" placeholder="ABC-1234" required>
         </div>
 
         <div>
-          <label>Driver Location</label>
-          <input type="text" placeholder="City or exact area" required>
+          <label for="driverLocation">Driver Location</label>
+          <input id="driverLocation" name="driverLocation" type="text" placeholder="City or exact area" required>
         </div>
 
         <div>
-          <label>Availability</label>
-          <input type="datetime-local" required>
+          <label for="driverAvailability">Availability</label>
+          <input id="driverAvailability" name="driverAvailability" type="datetime-local" required>
+        </div>
+
+        <!-- Account fields retained so owner is recorded (keeps authorization working) -->
+        <div class="form-grid-2">
+          <label for="ownerEmail">Account Email (required) — used to manage this submission</label>
+          <input id="ownerEmail" name="ownerEmail" type="email" placeholder="you@example.com" required>
+        </div>
+
+        <div>
+          <label for="ownerPassword">Account Password (required)</label>
+          <input id="ownerPassword" name="ownerPassword" type="password" placeholder="pick a password" required>
         </div>
 
         <div class="form-grid-2" style="grid-column: span 2;">
-          <label>Additional Notes</label>
-          <textarea rows="3" placeholder="Any important details..."></textarea>
+          <label for="driverNotes">Additional Notes</label>
+          <textarea id="driverNotes" name="driverNotes" rows="3" placeholder="Any important details..."></textarea>
         </div>
 
-        <div style="grid-column: span 2;">
+        <div style="grid-column: span 2; text-align:right;">
           <button type="submit">Submit Driver Info</button>
         </div>
 
       </form>
 
       <!-- Display submitted info -->
-      <div id="driverInfoDisplay" class="driver-card"></div>
+      <div id="driverInfoDisplay" class="driver-card" aria-live="polite" style="display:none;"></div>
 
     </div>
   </main>
@@ -224,55 +281,165 @@
         </ul>
       </div>
 
-       <!-- Socials -->
-    <div>
-      <h4>Connect With Us</h4>
-      <div class="socials" style="margin-bottom:1rem; display:flex; gap:0.5rem;">
-        <a href="#"><i class="fab fa-facebook-f" style="font-size:1.2rem;"></i></a>
-        <a href="mailto:info@uniraph.com"><i class="fas fa-envelope" style="font-size:1.2rem;"></i></a>
-        <a href="#"><i class="fab fa-linkedin-in" style="font-size:1.2rem;"></i></a>
-      </div>
+      <div>
+        <h4>Connect With Us</h4>
+        <div class="socials" style="margin-bottom:1rem; display:flex; gap:0.5rem;">
+          <a href="#"><i class="fab fa-facebook-f" style="font-size:1.2rem;"></i></a>
+          <a href="mailto:info@uniraph.com"><i class="fas fa-envelope" style="font-size:1.2rem;"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in" style="font-size:1.2rem;"></i></a>
+        </div>
 
-      <h5>Download Our App</h5>
-      <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
-        <button style="background:black;color:white;padding:0.5rem 1rem;border-radius:5px;">App Store</button>
-        <button style="background:black;color:white;padding:0.5rem 1rem;border-radius:5px;">Google Play</button>
+        <h5>Download Our App</h5>
+        <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
+          <button style="background:black;color:white;padding:0.5rem 1rem;border-radius:5px;">App Store</button>
+          <button style="background:black;color:white;padding:0.5rem 1rem;border-radius:5px;">Google Play</button>
+        </div>
       </div>
     </div>
 
-  </div>
     <div class="footer-bottom">
       <p>© 2025 UniraPh. All rights reserved.</p>
     </div>
   </footer>
 
-  <!-- Script to display driver info -->
+  <!-- Script to store driver info into localStorage and preserve owner account behavior -->
   <script>
-    const driverForm = document.querySelector('#availableDriverForm form');
-    const displayDiv = document.getElementById('driverInfoDisplay');
+    (function () {
+      const DRIVER_KEY = 'drivers';
+      const USERS_KEY = 'users';
+      const DEFAULT_ADMIN_EMAIL = 'admin@uniraph.com';
 
-    driverForm.addEventListener('submit', function(e){
-      e.preventDefault(); // prevent actual submission
+      const driverForm = document.getElementById('driverForm');
+      const displayDiv = document.getElementById('driverInfoDisplay');
 
-      const name = driverForm.querySelector('input[placeholder="e.g., Juan Dela Cruz"]').value;
-      const contact = driverForm.querySelector('input[placeholder="09xxxxxxxxx"]').value;
-      const vehicle = driverForm.querySelector('select').value;
-      const plate = driverForm.querySelector('input[placeholder="ABC-1234"]').value;
-      const location = driverForm.querySelector('input[placeholder="City or exact area"]').value;
-      const availability = driverForm.querySelector('input[type="datetime-local"]').value;
-      const notes = driverForm.querySelector('textarea').value;
+      // Ensure default admin user exists
+      function ensureDefaultUser() {
+        try {
+          const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+          if (!Array.isArray(users) || users.length === 0) {
+            const defaultUsers = [
+              { email: DEFAULT_ADMIN_EMAIL, password: 'admin123', isAdmin: true }
+            ];
+            localStorage.setItem(USERS_KEY, JSON.stringify(defaultUsers));
+          } else {
+            const hasAdmin = users.some(u => u.email === DEFAULT_ADMIN_EMAIL);
+            if (!hasAdmin) {
+              users.push({ email: DEFAULT_ADMIN_EMAIL, password: 'admin123', isAdmin: true });
+              localStorage.setItem(USERS_KEY, JSON.stringify(users));
+            }
+          }
+        } catch (err) {
+          console.error('Could not ensure default user', err);
+        }
+      }
 
-      displayDiv.innerHTML = `
-        <h3>Your Driver Info:</h3>
-        <button>${name} | ${vehicle} | ${plate} | Available: ${availability}</button>
-        <p>Contact: ${contact}</p>
-        <p>Location: ${location}</p>
-        <p>Notes: ${notes}</p>
-      `;
+      function findUserByEmail(email) {
+        try {
+          const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+          return users.find(u => u.email === email) || null;
+        } catch (err) {
+          console.error('find user error', err);
+          return null;
+        }
+      }
 
-      driverForm.reset();
-    });
+      function saveOrValidateUser(email, password) {
+        try {
+          const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+          const existing = users.find(u => u.email === email);
+          if (existing) {
+            if (existing.password !== password) {
+              return { ok: false, message: 'An account with that email exists. Password does not match.' };
+            }
+            return { ok: true, user: existing };
+          } else {
+            const newUser = { email, password, isAdmin: false };
+            users.push(newUser);
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
+            return { ok: true, user: newUser, created: true };
+          }
+        } catch (err) {
+          console.error('saveOrValidateUser error', err);
+          return { ok: false, message: 'Cannot access users storage.' };
+        }
+      }
+
+      function saveDriverObject(driver) {
+        try {
+          const drivers = JSON.parse(localStorage.getItem(DRIVER_KEY) || '[]');
+          drivers.push(driver);
+          localStorage.setItem(DRIVER_KEY, JSON.stringify(drivers));
+          return true;
+        } catch (err) {
+          console.error('save driver error', err);
+          return false;
+        }
+      }
+
+      ensureDefaultUser();
+
+      driverForm.addEventListener('submit', function(e){
+        e.preventDefault();
+
+        const name = document.getElementById('driverName').value.trim();
+        const contact = document.getElementById('driverContact').value.trim();
+        const vehicle = document.getElementById('driverVehicle').value;
+        const plate = document.getElementById('driverPlate').value.trim();
+        const location = document.getElementById('driverLocation').value.trim();
+        const availability = document.getElementById('driverAvailability').value;
+        const notes = document.getElementById('driverNotes').value.trim();
+        const ownerEmail = document.getElementById('ownerEmail').value.trim().toLowerCase();
+        const ownerPassword = document.getElementById('ownerPassword').value;
+
+        // basic validation
+        if (!name || !contact || !plate || !location || !availability || !ownerEmail || !ownerPassword) {
+          displayDiv.style.display = 'block';
+          displayDiv.innerHTML = '<p>Please fill all required fields.</p>';
+          return;
+        }
+
+        // create or validate user
+        const userResult = saveOrValidateUser(ownerEmail, ownerPassword);
+        if (!userResult.ok) {
+          displayDiv.style.display = 'block';
+          displayDiv.innerHTML = `<p>${userResult.message}</p>`;
+          return;
+        }
+
+        // build driver object with ownerEmail
+        const driver = {
+          name,
+          contact,
+          vehicle,
+          plate,
+          location,
+          availability,
+          notes,
+          ownerEmail // link owner
+        };
+
+        if (!saveDriverObject(driver)) {
+          displayDiv.style.display = 'block';
+          displayDiv.innerHTML = '<p>Error saving driver. Please try again.</p>';
+          return;
+        }
+
+        displayDiv.style.display = 'block';
+        displayDiv.innerHTML = `
+          <h3>Your Driver Info Saved</h3>
+          <p>${name} | ${vehicle} | ${plate}</p>
+          <p>Contact: ${contact}</p>
+          <p>Location: ${location}</p>
+          <p>Available: ${availability}</p>
+          <p>Notes: ${notes || 'None'}</p>
+        `;
+
+        // redirect to find.html after short delay
+        setTimeout(function () {
+          window.location.href = 'find.html';
+        }, 300);
+      });
+    })();
   </script>
-
 </body>
 </html>

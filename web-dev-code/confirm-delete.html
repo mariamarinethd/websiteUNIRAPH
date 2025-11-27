@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Confirm Delete - UniraPh</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { font-family: sans-serif; padding: 1.5rem; background:#f5f7fb; }
+    .card { max-width:720px; margin: 2rem auto; background:white; padding:1.25rem; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
+    .driver-summary { background:#eef2ff; padding:0.75rem; border-radius:6px; margin-bottom:1rem; }
+    label{display:block;margin-top:0.6rem;font-weight:600}
+    input[type="email"], input[type="password"] { width:100%; padding:0.5rem; border-radius:6px; border:1px solid #ccc; box-sizing:border-box; margin-top:0.25rem; }
+    .actions { display:flex; gap:0.5rem; justify-content:flex-end; margin-top:1rem; }
+    .btn { padding:0.5rem 0.9rem; border-radius:6px; border:none; cursor:pointer; }
+    .btn-cancel { background:#e5e7eb; }
+    .btn-delete { background:#ef4444; color:white; }
+    .notice { color:#b91c1c; margin-top:0.5rem; }
+    .back-link { display:inline-block; margin-top:0.75rem; color:#2563eb; text-decoration:none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Confirm deletion</h2>
+    <p>You're about to delete this driver submission. Provide credentials to confirm (owner or admin may delete).</p>
+
+    <div id="driverBox" class="driver-summary">Loading...</div>
+
+    <form id="authForm" autocomplete="off">
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="username" required>
+
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+
+      <div id="error" class="notice" style="display:none"></div>
+
+      <div class="actions">
+        <button type="button" id="cancelBtn" class="btn btn-cancel">Cancel</button>
+        <button type="submit" id="confirmBtn" class="btn btn-delete">Delete</button>
+      </div>
+    </form>
+
+    <a class="back-link" id="backToList" href="find.html">← Back to list</a>
+  </div>
+
+  <script>
+    const DRIVERS_KEY = 'drivers';
+    const USERS_KEY = 'users';
+    const DEFAULT_ADMIN_EMAIL = 'admin@uniraph.com';
+
+    function getQueryParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    }
+
+    function loadDrivers() {
+      try { return JSON.parse(localStorage.getItem(DRIVERS_KEY) || '[]'); }
+      catch (e) { console.error(e); return []; }
+    }
+
+    function saveDrivers(drivers) {
+      localStorage.setItem(DRIVERS_KEY, JSON.stringify(drivers));
+    }
+
+    function ensureDefaultUser() {
+      try {
+        const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+        if (!Array.isArray(users) || users.length === 0) {
+          localStorage.setItem(USERS_KEY, JSON.stringify([{ email: DEFAULT_ADMIN_EMAIL, password: 'admin123', isAdmin: true }]));
+        } else {
+          // ensure admin exists
+          const hasAdmin = users.some(u => u.email === DEFAULT_ADMIN_EMAIL);
+          if (!hasAdmin) {
+            users.push({ email: DEFAULT_ADMIN_EMAIL, password: 'admin123', isAdmin: true });
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
+          }
+        }
+      } catch (e) {
+        console.error('user setup error', e);
+      }
+    }
+
+    function findUser(email) {
+      try {
+        const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+        return users.find(u => u.email === email) || null;
+      } catch (e) {
+        console.error('find user error', e);
+        return null;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      ensureDefaultUser();
+
+      const idxParam = getQueryParam('index');
+      const index = idxParam !== null ? Number(idxParam) : NaN;
+      const drivers = loadDrivers();
+      const driverBox = document.getElementById('driverBox');
+      const backLink = document.getElementById('backToList');
+      const form = document.getElementById('authForm');
+      const err = document.getElementById('error');
+
+      if (Number.isNaN(index) || index < 0 || index >= drivers.length) {
+        driverBox.innerHTML = '<strong>Submission not found.</strong>';
+        form.addEventListener('submit', (e) => e.preventDefault());
+        return;
+      }
+
+      const driver = drivers[index];
+      driverBox.innerHTML = `
+        <strong>${escapeHtml(driver.name)} | ${escapeHtml(driver.vehicle)} | ${escapeHtml(driver.plate)}</strong>
+        <div>Location: ${escapeHtml(driver.location)}</div>
+        <div>Availability: ${escapeHtml(driver.availability)}</div>
+        <div>Notes: ${escapeHtml(driver.notes) || 'None'}</div>
+        <div style="margin-top:0.5rem;font-size:0.9rem;color:#374151">Submitted by: <strong>${escapeHtml(driver.ownerEmail || '(unknown)')}</strong></div>
+      `;
+
+      document.getElementById('cancelBtn').addEventListener('click', () => {
+        window.location.href = 'find.html';
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        err.style.display = 'none';
+        err.textContent = '';
+
+        const email = document.getElementById('email').value.trim().toLowerCase();
+        const password = document.getElementById('password').value;
+
+        if (!email || !password) {
+          err.textContent = 'Please enter both email and password.';
+          err.style.display = 'block';
+          return;
+        }
+
+        const user = findUser(email);
+        if (!user || user.password !== password) {
+          err.textContent = 'Invalid credentials.';
+          err.style.display = 'block';
+          return;
+        }
+
+        // Authorized if user is admin OR user.email === driver.ownerEmail
+        const isAdmin = !!user.isAdmin || user.email === DEFAULT_ADMIN_EMAIL;
+        const isOwner = driver.ownerEmail && driver.ownerEmail.toLowerCase() === email;
+
+        if (!isAdmin && !isOwner) {
+          err.textContent = 'You are not authorized to delete this submission. Only the owner or admin may delete it.';
+          err.style.display = 'block';
+          return;
+        }
+
+        // proceed to delete
+        try {
+          drivers.splice(index, 1);
+          saveDrivers(drivers);
+          window.location.href = 'find.html';
+        } catch (ex) {
+          console.error('delete error', ex);
+          err.textContent = 'Error deleting submission.';
+          err.style.display = 'block';
+        }
+      });
+
+      // small helper
+      function escapeHtml(s) {
+        return String(s || '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;" })[c]);
+      }
+    });
+  </script>
+</body>
+</html>
