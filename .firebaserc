@@ -1,8 +1,0 @@
-{
-  "projects": {
-    "default": "project-uniraph",
-    "project-uniraph": "project-uniraph"
-  },
-  "targets": {},
-  "etags": {}
-}
