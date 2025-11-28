@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Manage Your Drivers — UniraPh</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .container { max-width:900px;margin:2rem auto;padding:1rem; }
+    .card { background:#fff;padding:1rem;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.06); margin-bottom:1rem;}
+    .driver-row { display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+    .driver-info { flex:1; min-width:220px;}
+    .btn { background:#2563eb;color:white;border:none;padding:0.5rem 0.75rem;border-radius:6px;cursor:pointer;}
+    .btn-danger { background:#dc2626; }
+    .small { font-size:0.9rem;color:#334155; }
+    .hidden { display:none; }
+    form.inline-edit { display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.5rem; }
+    input, select, textarea { padding:0.45rem;border:1px solid #e2e8f0;border-radius:6px; }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>Manage Your Drivers</h1>
+
+    <div id="authCard" class="card">
+      <div id="signedOutView">
+        <p class="small">Sign in with the account you used when submitting drivers.</p>
+        <form id="authForm" class="inline-edit" onsubmit="return false;">
+          <input id="authEmail" type="email" placeholder="you@example.com" required />
+          <input id="authPassword" type="password" placeholder="password" required />
+          <button id="signInBtn" class="btn">Sign In</button>
+          <button id="createAccountBtn" class="btn">Create Account</button>
+        </form>
+      </div>
+
+      <div id="signedInView" class="hidden">
+        <p>Signed in as <span id="userEmail"></span></p>
+        <button id="signOutBtn" class="btn">Sign Out</button>
+        <a href="driversite.html" style="margin-left:1rem;">Submit a new driver</a>
+      </div>
+    </div>
+
+    <div id="driversList" class="card hidden">
+      <h2>Your Drivers</h2>
+      <div id="driversContainer"></div>
+    </div>
+
+  </main>
+
+  <!-- Firebase compat -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <script src="manage-drivers.js"></script>
+</body>
+</html>

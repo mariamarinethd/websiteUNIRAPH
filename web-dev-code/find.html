@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Find Drivers - UniraPh</title>
 
   <link rel="stylesheet" href="style.css">
@@ -11,9 +11,12 @@
   <!-- Font Awesome -->
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
     /* keep page-specific styles here so design is preserved even if style.css changes */
     main { padding: 2rem; }
+    .filters { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem; align-items:center; }
+    .filters input, .filters select, .filters button { padding:0.5rem; border-radius:6px; border:1px solid #e2e8f0; }
     .driver-card {
       background:white; padding:1rem; margin-bottom:1rem;
       border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.2);
@@ -33,7 +36,18 @@
       font-weight: bold;
       margin-left: 0.5rem;
     }
-    
+
+    .small { color:#475569; font-size:0.95rem; margin-top:0.3rem; }
+    .muted { color:#64748b; font-size:0.9rem; }
+
+    .no-results { padding:1rem; background:#f8fafc; border-radius:8px; color:#475569; }
+
+    .contact-block { margin-top:0.5rem; display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap; }
+    .masked-phone { font-weight:700; color:#0f172a; }
+    .contact-links.hidden { display:none; }
+    .contact-links a { margin-right:0.5rem; }
+    .btn { background:#2563eb;color:white;border:none;padding:0.45rem 0.65rem;border-radius:6px; cursor:pointer; font-weight:600; }
+    .btn-ghost { background:transparent;color:#2563eb;border:1px solid #c7d2fe; }
   </style>
 </head>
 <body>
@@ -94,7 +108,27 @@
       <p>Contact drivers directly to book a ride</p>
     </header>
 
-    <!-- driver list restored to original place and styled -->
+    <!-- Filters: search, vehicle, location, availability range -->
+    <div class="filters" aria-label="Driver filters">
+      <input id="searchInput" type="search" placeholder="Search by name, plate, notes..." />
+      <select id="vehicleFilter">
+        <option value="">All vehicles</option>
+        <option>Motorcycle</option>
+        <option>Tricycle</option>
+        <option>Car</option>
+        <option>Van</option>
+        <option>Electric Vehicle</option>
+      </select>
+      <input id="locationFilter" type="text" placeholder="Filter by location (city or area)" />
+      <!-- Availability range (datetime-local) -->
+      <label for="availabilityFrom" class="muted" style="margin-left:6px;">From</label>
+      <input id="availabilityFrom" type="datetime-local" />
+      <label for="availabilityTo" class="muted">To</label>
+      <input id="availabilityTo" type="datetime-local" />
+      <button id="clearFilters" class="btn" style="background:#64748b;">Clear</button>
+    </div>
+
+    <!-- driver list -->
     <section id="driverList">
       <p>Loading drivers...</p>
     </section>
@@ -162,53 +196,13 @@
       <p>© 2025 UniraPh. All rights reserved.</p>
     </div>
   </footer>
-<script>
-  // This script restores the original find.html behaviour but keeps the nicer delete flow:
-  // - shows driver cards (design preserved)
-  // - Delete now links to confirm-delete.html?index=IDX (separate page) to avoid modal z-index issues
-  const DRIVERS_KEY = 'drivers';
 
-  const escapeHtml = s => String(s || '').replace(/[&<>"']/g, c => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"
-  })[c]);
+<!-- Firebase compat scripts (needed to read Realtime Database) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-  function getDrivers() {
-    try { return JSON.parse(localStorage.getItem(DRIVERS_KEY) || '[]'); }
-    catch (e) { console.error('parse drivers', e); return []; }
-  }
-
-  function renderDrivers() {
-    const drivers = getDrivers();
-    const container = document.getElementById('driverList');
-    container.innerHTML = '';
-
-    if (!drivers || drivers.length === 0) {
-      container.innerHTML = '<p>No drivers available currently.</p>';
-      return;
-    }
-
-    drivers.forEach((driver, idx) => {
-      const card = document.createElement('div');
-      card.className = 'driver-card';
-      card.innerHTML = `
-        <h4>${escapeHtml(driver.name)} | ${escapeHtml(driver.vehicle)} | ${escapeHtml(driver.plate)}</h4>
-        <p>Location: ${escapeHtml(driver.location)}</p>
-        <p>Availability: ${escapeHtml(driver.availability)}</p>
-        <p>Notes: ${escapeHtml(driver.notes) || 'None'}</p>
-        <p>
-          <a class="action-link" href="tel:${encodeURIComponent(driver.contact)}"><i class="fas fa-phone"></i> Call</a>
-          <a class="action-link" href="sms:${encodeURIComponent(driver.contact)}"><i class="fas fa-comment"></i> Text</a>
-          <a class="delete-link" href="confirm-delete.html?index=${idx}">Delete</a>
-        </p>
-      `;
-      container.appendChild(card);
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    renderDrivers();
-  });
-</script>
-
+<!-- Page script that pulls drivers from the Firebase Realtime Database and supports client-side filters -->
+<script src="find-auth.js"></script>
 </body>
 </html>
