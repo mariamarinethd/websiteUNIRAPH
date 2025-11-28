@@ -72,6 +72,24 @@
     </div>
 </section>
 
+<script>
+    // Demo form submission
+    const form = document.getElementById('signInForm');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault(); // prevent page reload
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        // Demo validation (replace with real auth later)
+        if(email && password){
+            alert('Sign in successful! Redirecting to driver site...');
+            window.location.href = 'driversite.html'; // redirect after login
+        } else {
+            alert('Please enter both email and password.');
+        }
+    });
+</script>
+
 
 </body>
 </html>
