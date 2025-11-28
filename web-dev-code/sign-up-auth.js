@@ -1,3 +1,4 @@
+// Sign-up client script — creates Firebase Auth users and stores profile (full name) in Realtime DB
 const firebaseConfig = {
   apiKey: "AIzaSyB0nMt84ndd6F_exO4Zluj_mEzoGxtPoxs",
   authDomain: "project-uniraph.firebaseapp.com",
@@ -9,47 +10,54 @@ const firebaseConfig = {
   measurementId: "G-2DLEQ25649"
 };
 
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
 
-// Reference database
-var signupformDB = firebase.database().ref("sign-up-form");
-
-document.getElementById("signUpForm").addEventListener("submit", submitForm);
-
-function submitForm(e) {
+document.getElementById("signUpForm").addEventListener("submit", async function(e) {
   e.preventDefault();
 
-  var fullName = getElementVal("fullName");
-  var email = getElementVal("email");
-  var password = getElementVal("password");
-  var confirmPassword = getElementVal("confirmPassword");
+  const fullName = document.getElementById("fullName").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
 
-  console.log(fullName, email, password, confirmPassword);
+  // Basic validation
+  if (!fullName) return alert("Please enter your full name.");
+  if (!email) return alert("Please enter your email.");
+  if (!password || password.length < 6) return alert("Password must be at least 6 characters.");
+  if (password !== confirmPassword) return alert("Passwords do not match.");
 
-  // OPTIONAL: Check password match
-  if (password !== confirmPassword) {
-    alert("Passwords do not match!");
-    return;
+  try {
+    // Create the Firebase Auth user
+    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+    const user = userCredential.user;
+
+    // Update the Auth profile displayName (keeps full name in Firebase Authentication profile)
+    await user.updateProfile({ displayName: fullName });
+
+    // Save non-sensitive profile data in Realtime Database under /users/{uid}
+    // DO NOT store the password.
+    await db.ref('users/' + user.uid).set({
+      fullName: fullName,
+      email: email,
+      createdAt: Date.now()
+    });
+
+    alert("Account created successfully! You can now sign in.");
+    // Redirect to sign-in page (or to dashboard if you prefer to auto-login)
+    window.location.href = "sign-incom.html";
+
+  } catch (error) {
+    console.error("createUserWithEmailAndPassword error:", error.code, error.message);
+    if (error.code === 'auth/email-already-in-use') {
+      alert("That email is already in use. Please sign in instead.");
+    } else if (error.code === 'auth/invalid-email') {
+      alert("Invalid email address.");
+    } else if (error.code === 'auth/weak-password') {
+      alert("Weak password. Choose a stronger password.");
+    } else {
+      alert(error.message || "Failed to create account. See console for details.");
+    }
   }
-
-  saveToDatabase(fullName, email, password);
-
-  alert("Sign-up successful!");
-
-  document.getElementById("signUpForm").reset();
-}
-
-function saveToDatabase(fullName, email, password) {
-  var newSignup = signupformDB.push();
-  newSignup.set({
-    fullName: fullName,
-    email: email,
-    password: password
-  });
-}
-
-const getElementVal = (id) => {
-  return document.getElementById(id).value;
-};
-
+});

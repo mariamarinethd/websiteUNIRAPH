@@ -34,7 +34,7 @@ function submitForm(e) {
       // userCredential.user contains user info
       alert("Sign-in successful!");
       // Redirect to protected/dashboard page
-      window.location.href = "dashboard.html"; // change to your protected page
+      window.location.href = "driversite.html"; // change to your protected page
     })
     .catch((error) => {
       // Handle errors and show friendly messages
