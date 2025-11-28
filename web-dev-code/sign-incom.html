@@ -35,13 +35,13 @@
         </div>
       </div>
 
-<div class="dropdown">
-  <button class="btn-signup">For Drivers</button>
-  <div class="dropdown-content">
-    <a href="sign-upD.html">Sign Up as Driver</a>
-    <a href="sign-incom.html">Sign In</a>
-  </div>
-</div>
+      <div class="dropdown">
+        <button class="btn-signup">For Drivers</button>
+        <div class="dropdown-content">
+          <a href="sign-upD.html">Sign Up as Driver</a>
+          <a href="sign-incom.html">Sign In</a>
+        </div>
+      </div>
 
     </nav>
 
@@ -51,45 +51,34 @@
 
 <!-- SIGN IN SECTION -->
 <section class="auth-section">
-    <div class="auth-box">
-        <h2>Welcome Back</h2>
-        <p class="auth-subtext">Sign in to continue your UNIRAPH experience.</p>
+  <div class="auth-box">
+      <h2>Welcome Back</h2>
+      <p class="auth-subtext">Sign in to continue your UNIRAPH experience.</p>
 
-        <form class="auth-form" id="signInForm">
-            <label for="email">Email</label>
-            <input type="email" id="email" placeholder="Enter your email" required>
+      <form class="auth-form" id="signInForm">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="Enter your email" required>
 
-            <label for="password">Password</label>
-            <input type="password" id="password" placeholder="Enter your password" required>
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password" required>
 
-            <button type="submit" class="auth-btn">Sign In</button>
-        </form>
+          <button type="submit" class="auth-btn">Sign In</button>
+      </form>
 
-        <p class="switch-text">
-            Don’t have an account?
-            <a href="sign-upD.html">Sign Up</a>
-        </p>
-    </div>
+      <p class="switch-text">
+          Don’t have an account?
+          <a href="sign-upD.html">Sign Up</a>
+      </p>
+  </div>
 </section>
 
-<script>
-    // Demo form submission
-    const form = document.getElementById('signInForm');
-    form.addEventListener('submit', function(e) {
-        e.preventDefault(); // prevent page reload
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+<!-- Firebase compat scripts -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-        // Demo validation (replace with real auth later)
-        if(email && password){
-            alert('Sign in successful! Redirecting to driver site...');
-            window.location.href = 'driversite.html'; // redirect after login
-        } else {
-            alert('Please enter both email and password.');
-        }
-    });
-</script>
-
+<!-- Your sign-in logic -->
+<script src="sign-in-auth.js"></script>
 
 </body>
 </html>
