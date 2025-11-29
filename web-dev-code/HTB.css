@@ -109,7 +109,7 @@ header nav a.active {
 /* ===================== Hero Section ===================== */
 .hero {
   background: linear-gradient(to right, #f59e0b, #d97706);
-  color: white;
+  color: rgb(92, 78, 224);
   text-align: center;
   padding: 4rem 1.5rem;
 }

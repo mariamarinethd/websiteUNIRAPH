@@ -48,6 +48,57 @@
     .contact-links a { margin-right:0.5rem; }
     .btn { background:#2563eb;color:white;border:none;padding:0.45rem 0.65rem;border-radius:6px; cursor:pointer; font-weight:600; }
     .btn-ghost { background:transparent;color:#2563eb;border:1px solid #c7d2fe; }
+
+.trust-section {
+  margin: 60px auto;
+  padding: 40px 20px;
+  max-width: 1100px;
+  text-align: center;
+}
+
+.trust-section h2 {
+  font-size: 28px;
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+
+.trust-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.trust-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 25px 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.trust-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+}
+
+.trust-card i {
+  font-size: 36px;
+  margin-bottom: 15px;
+  color: #555;
+}
+
+.trust-card h4 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.trust-card p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+
   </style>
 </head>
 <body>
@@ -99,6 +150,36 @@
   <button id="signInBtnMobile" class="btn-signin">Sign In</button>
   <button id="signUpBtnMobile" class="btn-signup">Sign Up</button>
 </div>
+
+<section class="trust-section">
+  <h2>Why UniraPh?</h2>
+
+  <div class="trust-cards">
+    <div class="trust-card">
+      <i class="fas fa-user-check"></i>
+      <h4>Verified Drivers</h4>
+      <p>All drivers go through identity and background verification.</p>
+    </div>
+
+    <div class="trust-card">
+      <i class="fas fa-coins"></i>
+      <h4>Student-Friendly Rates</h4>
+      <p>Affordable rides designed for students and daily commuters.</p>
+    </div>
+
+    <div class="trust-card">
+      <i class="fas fa-shield-alt"></i>
+      <h4>Safe & Secure</h4>
+      <p>Your safety comes first with secured communication and ride tracking.</p>
+    </div>
+
+    <div class="trust-card">
+      <i class="fas fa-star"></i>
+      <h4>Community Rated</h4>
+      <p>Drivers are rated by real commuters for quality assurance.</p>
+    </div>
+  </div>
+</section>
 
   <main>
     <header>
