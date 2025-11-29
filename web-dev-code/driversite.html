@@ -303,12 +303,23 @@
     </div>
   </footer>
 
-  <!-- Firebase compat scripts -->
+<!-- Firebase compat scripts -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-<!-- New Firebase-backed sign/submit logic (replaces the old localStorage-only inline script) -->
+<!-- Supabase JS (single include) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<script>
+  // Provide your public (anon) Supabase values here — do NOT use a service_role key in client code.
+  // Replace with your real project URL and anon key.
+  window.SUPABASE_URL = "https://buksgibhdmlcrcbmvvno.supabase.co";
+  window.SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1a3NnaWJoZG1sY3JjYm12dm5vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ0MDgyOTcsImV4cCI6MjA3OTk4NDI5N30.bgy6haZVxdGVmyOqGkxGwEYveyZO7R9pzcy1FM7T0hs";
+</script>
+
+<!-- Your Firebase + Supabase logic (corrected) -->
 <script src="driversite-auth.js"></script>
+
 </body>
 </html>
