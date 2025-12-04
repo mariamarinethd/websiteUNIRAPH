@@ -1,4 +1,4 @@
-// driversite-auth.js — corrected to match your HTML ids and to use Supabase as a backup.
+// driversite-auth.js — updated to also populate /drivers/{uid} and /submissions entries
 // IMPORTANT: Replace SUPABASE_ANON_KEY in the HTML (window.SUPABASE_ANON_KEY) with your public anon key.
 // Do NOT put a service_role key on the client.
 
@@ -101,7 +101,9 @@
         if (signInErr.code === 'auth/user-not-found') {
           userCredential = await auth.createUserWithEmailAndPassword(ownerEmail, ownerPassword);
           // Optionally set displayName
-          await userCredential.user.updateProfile({ displayName: name || ownerEmail }).catch(()=>{});
+          try {
+            await userCredential.user.updateProfile({ displayName: name || ownerEmail });
+          } catch (ignore) {}
         } else if (signInErr.code === 'auth/wrong-password') {
           showMessage('<p>An account with that email exists but the password is incorrect.</p>');
           return;
@@ -117,6 +119,9 @@
         showMessage('<p>Unable to obtain authenticated user.</p>');
         return;
       }
+
+      // Log the authenticated UID so you can verify it in browser console
+      console.log('Authenticated user uid:', user.uid, 'email:', user.email);
 
       await ensureFreshAuthToken(user);
 
@@ -134,17 +139,64 @@
         createdAt: Date.now()
       };
 
-      // Write to Firebase
+      // --- Primary write: push into /drivers (keeps existing backup behavior) ---
       const newDriverRef = db.ref('drivers').push();
       await newDriverRef.set(driverObj);
+      console.log('Firebase pushed driver record key:', newDriverRef.key);
+
+      // --- Ensure canonical profile node exists at /drivers/{uid} so dashboard can read it ---
+      // This makes the dashboard's db.ref('drivers/' + uid) listener find this driver's profile.
+      try {
+        const canonicalDriver = {
+          // store a cleaned profile object under drivers/{uid}
+          name: name,
+          phone: contact,
+          email: ownerEmail,
+          vehicle: vehicle,
+          plate: plate,
+          location: location,
+          availability: availability,
+          notes: notes,
+          ownerUid: user.uid,
+          createdAt: driverObj.createdAt,
+          lastUpdated: Date.now()
+        };
+        await db.ref('drivers/' + user.uid).set(canonicalDriver);
+        console.log('Canonical /drivers/{uid} profile written for uid:', user.uid);
+      } catch (errCan) {
+        console.warn('Failed to write canonical drivers/{uid} node:', errCan);
+      }
+
+      // --- Create a /submissions entry so dashboard's submissions query finds it ---
+      try {
+        const submissionRef = db.ref('submissions').push();
+        const submissionObj = {
+          uid: user.uid,
+          firebaseDriverKey: newDriverRef.key,
+          name,
+          contact,
+          vehicle,
+          plate,
+          location,
+          availability,
+          notes,
+          createdAt: Date.now()
+        };
+        await submissionRef.set(submissionObj);
+        console.log('Submission entry created:', submissionRef.key);
+      } catch (subErr) {
+        console.warn('Failed to create submission entry:', subErr);
+      }
 
       // Add reference under /users/{uid}/drivers/
-      await db.ref(`users/${user.uid}/drivers/${newDriverRef.key}`).set({
-        driverId: newDriverRef.key,
-        createdAt: Date.now()
-      });
-
-      console.log('Firebase write OK');
+      try {
+        await db.ref(`users/${user.uid}/drivers/${newDriverRef.key}`).set({
+          driverId: newDriverRef.key,
+          createdAt: Date.now()
+        });
+      } catch (usrRefErr) {
+        console.warn('Failed to write users/{uid}/drivers ref:', usrRefErr);
+      }
 
       // Try inserting a backup copy into Supabase (if configured)
       if (supabaseClient) {
@@ -191,10 +243,8 @@
 
     } catch (err) {
       console.error('driversite-auth error', err);
-      if (err && err.code === 'PERMISSION_DENIED') {
+      if (err && (err.code === 'PERMISSION_DENIED' || String(err).toLowerCase().includes('permission_denied'))) {
         showMessage('<p>Failed to save driver: permission denied. Please ensure you are signed in and database rules allow this write.</p>');
-      } else if (err && String(err).toLowerCase().includes('permission_denied')) {
-        showMessage('<p>Failed to save driver: permission denied by database rules. See console for details.</p>');
       } else {
         showMessage(`<p>Failed to save driver: ${escapeHtml(err.message || String(err) || 'Unknown error')}</p>`);
       }
