@@ -26,7 +26,8 @@
 
       <nav class="nav-links" aria-label="Sidebar navigation">
         <a href="#" class="active" data-nav="dashboard">Dashboard</a>
-        <!-- Removed per request: My Driver Info, Update Availability, Settings -->
+        <a href="driversite.html"> Submit a form</a>
+        <a href="index.html">Back to Home</a>
         <a href="#" id="sidebarLogout">Logout</a>
       </nav>
 
@@ -94,19 +95,7 @@
           </div>
         </div>
 
-        <div class="card" id="cardAvailability">
-          <h3>Availability & Location</h3>
-          <div style="display:flex;flex-direction:column;gap:6px">
-            <div class="muted">Next available</div>
-            <div class="value" id="nextAvailable">—</div>
-            <div class="muted">Current location</div>
-            <div class="value" id="currentLocation">—</div>
-          </div>
-          <div class="actions">
-            <!-- Update availability button removed from card per request -->
-            <button class="btn ghost" id="locateBtn">Share location</button>
-          </div>
-        </div>
+    
 
         <div class="card" id="cardStatus">
           <h3>Status</h3>
