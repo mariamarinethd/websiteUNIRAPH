@@ -1,10 +1,9 @@
 // Dashboard logic with Firebase Authentication + Realtime Database integration.
 // Replace firebaseConfig below with your project's config object.
-// This script expects the DOM elements present in dashboard.html to exist.
 
 (function () {
   // ------- Firebase config: REPLACE with your project's details -------
-  const firebaseConfig = {
+ const firebaseConfig = {
   apiKey: "AIzaSyB0nMt84ndd6F_exO4Zluj_mEzoGxtPoxs",
   authDomain: "project-uniraph.firebaseapp.com",
   databaseURL: "https://project-uniraph-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -46,6 +45,15 @@
   const fieldNotes = document.getElementById('fieldNotes');
   const fieldEmail = document.getElementById('fieldEmail');
 
+  // Auth elements
+  const authBackdrop = document.getElementById('authBackdrop');
+  const authForm = document.getElementById('authForm');
+  const authEmail = document.getElementById('authEmail');
+  const authPassword = document.getElementById('authPassword');
+  const createAccountBtn = document.getElementById('createAccountBtn');
+  const anonSignInBtn = document.getElementById('anonSignInBtn');
+  const authError = document.getElementById('authError');
+
   // Modal refs & actions
   const modalBackdrop = document.getElementById('modalBackdrop');
   const profileBtn = document.getElementById('profileBtn');
@@ -71,6 +79,16 @@
   const menuLogout = document.getElementById('menuLogout');
   const sidebarLogout = document.getElementById('sidebarLogout');
 
+  // other buttons
+  const quickViewProfile = document.getElementById('quickViewProfile');
+  const viewVehicleBtn = document.getElementById('viewVehicleBtn');
+  const editVehicleBtn = document.getElementById('editVehicleBtn');
+  const updateAvailabilityBtn = document.getElementById('updateAvailabilityBtn');
+  const locateBtn = document.getElementById('locateBtn');
+  const newMessageBtn = document.getElementById('newMessageBtn');
+  const refreshStatusBtn = document.getElementById('refreshStatus');
+  const statusDetailsBtn = document.getElementById('statusDetails');
+
   // Firebase instances (will be initialized later)
   let firebaseApp = null;
   let auth = null;
@@ -79,7 +97,6 @@
   let currentUid = null;
   let driverListener = null;
 
-  // Simple UI helpers
   function initials(name) {
     return (name || 'D').split(' ').map(n => n[0] || '').slice(0, 2).join('').toUpperCase();
   }
@@ -91,20 +108,19 @@
   }
 
   function setYear() {
-    yearEl.textContent = new Date().getFullYear();
+    const el = document.getElementById('year');
+    if (el) el.textContent = new Date().getFullYear();
   }
 
-  // Set UI from driver object
   function loadDriverData(data) {
     if (!data) {
-      // empty state
-      headerName.textContent = 'Driver';
-      headerEmail.textContent = '';
-      avatarInitials.textContent = initials('D');
+      headerName.textContent = auth && auth.currentUser ? (auth.currentUser.displayName || auth.currentUser.email || 'Driver') : 'Driver';
+      headerEmail.textContent = auth && auth.currentUser ? (auth.currentUser.email || '') : '';
+      avatarInitials.textContent = initials(headerName.textContent);
 
       displayName.textContent = '—';
       displayPhone.textContent = '—';
-      displayEmail.textContent = '—';
+      displayEmail.textContent = auth && auth.currentUser ? (auth.currentUser.email || '—') : '—';
 
       vehicleType.textContent = '—';
       plateNumber.textContent = '—';
@@ -124,17 +140,17 @@
       fieldLocation.textContent = '—';
       fieldAvailability.textContent = '—';
       fieldNotes.textContent = '—';
-      fieldEmail.textContent = '—';
+      fieldEmail.textContent = auth && auth.currentUser ? (auth.currentUser.email || '—') : '—';
       return;
     }
 
-    headerName.textContent = data.name || 'Driver';
-    headerEmail.textContent = data.email || '';
-    avatarInitials.textContent = initials(data.name || 'D');
+    headerName.textContent = data.name || (auth && auth.currentUser ? auth.currentUser.displayName || auth.currentUser.email : 'Driver');
+    headerEmail.textContent = data.email || (auth && auth.currentUser ? auth.currentUser.email : '');
+    avatarInitials.textContent = initials(headerName.textContent);
 
     displayName.textContent = data.name || '—';
     displayPhone.textContent = data.phone || '—';
-    displayEmail.textContent = data.email || '—';
+    displayEmail.textContent = data.email || (auth && auth.currentUser ? auth.currentUser.email : '—');
 
     vehicleType.textContent = data.vehicle || '—';
     plateNumber.textContent = data.plate || '—';
@@ -157,10 +173,9 @@
     fieldLocation.textContent = data.location || '—';
     fieldAvailability.textContent = data.availability || '—';
     fieldNotes.textContent = data.notes || '—';
-    fieldEmail.textContent = data.email || '—';
+    fieldEmail.textContent = data.email || (auth && auth.currentUser ? auth.currentUser.email : '—');
   }
 
-  // Initialize Firebase and set auth listener
   function initFirebase() {
     try {
       firebaseApp = firebase.initializeApp(firebaseConfig);
@@ -172,18 +187,16 @@
       return;
     }
 
-    // Monitor auth state
     auth.onAuthStateChanged(user => {
       if (user) {
         currentUid = user.uid;
-        // Listen to realtime driver data at /drivers/{uid}
+        hideAuth();
         attachDriverListener(currentUid);
       } else {
         currentUid = null;
         detachDriverListener();
+        showAuth();
         loadDriverData(null);
-        // For demo, you can choose to sign in anonymously or redirect to login.
-        // auth.signInAnonymously();
       }
     });
   }
@@ -208,16 +221,14 @@
     driverListener = null;
   }
 
-  // Update driver data (partial)
   function updateDriverData(patch) {
     if (!currentUid) {
       alert('Not signed in.');
-      return;
+      return Promise.reject(new Error('Not signed in'));
     }
     const now = new Date().toISOString();
     patch.lastUpdated = now;
     const updates = {};
-    // Only update allowed fields to avoid overwrite
     const allowed = ['name', 'phone', 'vehicle', 'plate', 'location', 'availability', 'notes', 'lastUpdated', 'activeSince', 'email'];
     for (const k of Object.keys(patch)) {
       if (allowed.includes(k)) updates[k] = patch[k];
@@ -232,7 +243,6 @@
       });
   }
 
-  // Delete submission (remove node)
   function deleteDriverSubmission() {
     if (!currentUid) {
       alert('Not signed in.');
@@ -242,7 +252,6 @@
     return db.ref('drivers/' + currentUid).remove()
       .then(() => {
         alert('Submission deleted.');
-        // After deletion, UI will update via realtime listener to null
       })
       .catch(err => {
         console.error('Delete failed', err);
@@ -250,21 +259,76 @@
       });
   }
 
-  // Sign out
   function signOut() {
     if (!auth) return;
     auth.signOut().then(() => {
       // Signed out
-      alert('Signed out.');
-      // optionally redirect to login page:
-      // window.location.href = '/';
     }).catch(err => {
       console.error('Sign out error', err);
       alert('Sign out failed. See console for details.');
     });
   }
 
-  // UI event wiring
+  function showAuth(message) {
+    if (authBackdrop) {
+      authBackdrop.setAttribute('aria-hidden', 'false');
+      if (message && authError) {
+        authError.style.display = 'block';
+        authError.textContent = message;
+      } else if (authError) {
+        authError.style.display = 'none';
+      }
+    }
+    // make dashboard non-interactive (aria-hidden)
+    document.getElementById('app').setAttribute('aria-hidden', 'true');
+  }
+
+  function hideAuth() {
+    if (authBackdrop) {
+      authBackdrop.setAttribute('aria-hidden', 'true');
+      if (authError) {
+        authError.style.display = 'none';
+      }
+    }
+    document.getElementById('app').setAttribute('aria-hidden', 'false');
+  }
+
+  function openEditModalFromData(data) {
+    modalName.value = data && data.name ? data.name : (auth.currentUser ? (auth.currentUser.displayName || '') : '');
+    modalPhone.value = data && data.phone ? data.phone : '';
+    modalVehicle.value = data && data.vehicle ? data.vehicle : '';
+    modalPlate.value = data && data.plate ? data.plate : '';
+    modalNotes.value = data && data.notes ? data.notes : '';
+    modalBackdrop.classList.add('show');
+    modalBackdrop.setAttribute('aria-hidden', 'false');
+    document.getElementById('modalTitle').textContent = 'Edit Profile';
+  }
+
+  function openQuickView(data) {
+    // reuse modal as quick view (read-only)
+    document.getElementById('modalTitle').textContent = 'Profile quick view';
+    modalName.value = data && data.name ? data.name : '';
+    modalPhone.value = data && data.phone ? data.phone : '';
+    modalVehicle.value = data && data.vehicle ? data.vehicle : '';
+    modalPlate.value = data && data.plate ? data.plate : '';
+    modalNotes.value = data && data.notes ? data.notes : '';
+    // disable inputs
+    modalName.disabled = modalPhone.disabled = modalVehicle.disabled = modalPlate.disabled = modalNotes.disabled = true;
+    document.getElementById('saveModal').style.display = 'none';
+    document.getElementById('cancelModal').textContent = 'Close';
+    modalBackdrop.classList.add('show');
+    modalBackdrop.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeModalFn() {
+    modalBackdrop.classList.remove('show');
+    modalBackdrop.setAttribute('aria-hidden', 'true');
+    // enable inputs and restore buttons
+    modalName.disabled = modalPhone.disabled = modalVehicle.disabled = modalPlate.disabled = modalNotes.disabled = false;
+    document.getElementById('saveModal').style.display = '';
+    document.getElementById('cancelModal').textContent = 'Cancel';
+  }
+
   function setupEvents() {
     profileBtn.addEventListener('click', (e) => {
       profileMenu.classList.toggle('show');
@@ -279,32 +343,65 @@
       }
     });
 
-    function openEditModalFromData(data) {
-      modalName.value = data && data.name ? data.name : '';
-      modalPhone.value = data && data.phone ? data.phone : '';
-      modalVehicle.value = data && data.vehicle ? data.vehicle : '';
-      modalPlate.value = data && data.plate ? data.plate : '';
-      modalNotes.value = data && data.notes ? data.notes : '';
-      modalBackdrop.classList.add('show');
-      modalBackdrop.setAttribute('aria-hidden', 'false');
-      document.getElementById('modalTitle').textContent = 'Edit Profile';
-    }
+    // Auth form sign in
+    authForm.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      const email = authEmail.value.trim();
+      const pass = authPassword.value;
+      auth.signInWithEmailAndPassword(email, pass)
+        .then(() => {
+          // signed in; onAuthStateChanged will run
+        })
+        .catch(err => {
+          console.error('Sign in failed', err);
+          showAuth(err.message || 'Sign in failed');
+        });
+    });
 
+    // Create account
+    createAccountBtn.addEventListener('click', () => {
+      const email = authEmail.value.trim();
+      const pass = authPassword.value;
+      if (!email || pass.length < 6) {
+        showAuth('Provide a valid email and a password with at least 6 characters.');
+        return;
+      }
+      auth.createUserWithEmailAndPassword(email, pass)
+        .then(cred => {
+          // create an initial driver DB node
+          const uid = cred.user.uid;
+          const initial = {
+            email: email,
+            name: cred.user.displayName || '',
+            activeSince: new Date().toISOString(),
+            lastUpdated: new Date().toISOString()
+          };
+          return db.ref('drivers/' + uid).set(initial);
+        })
+        .catch(err => {
+          console.error('Create account failed', err);
+          showAuth(err.message || 'Account creation failed');
+        });
+    });
+
+    // Anonymous sign-in for testing (not recommended for production)
+    anonSignInBtn.addEventListener('click', () => {
+      auth.signInAnonymously().catch(err => {
+        console.error('Anonymous sign-in failed', err);
+        showAuth(err.message || 'Anonymous sign in failed');
+      });
+    });
+
+    // Edit profile
     editProfileBtn.addEventListener('click', () => {
-      // get latest snapshot once
       if (driverRef) {
-        driverRef.once('value').then(snap => openEditModalFromData(snap.val())).catch(()=>openEditModalFromData(null));
+        driverRef.once('value').then(snap => openEditModalFromData(snap.val())).catch(() => openEditModalFromData(null));
       } else {
         openEditModalFromData(null);
       }
     });
-
-    menuEditProfile.addEventListener('click', () => {
-      if (driverRef) {
-        driverRef.once('value').then(snap => openEditModalFromData(snap.val())).catch(()=>openEditModalFromData(null));
-      } else {
-        openEditModalFromData(null);
-      }
+    menuEditProfile.addEventListener('click', (e) => {
+      editProfileBtn.click();
     });
 
     closeModal.addEventListener('click', closeModalFn);
@@ -325,45 +422,60 @@
       updateDriverData(updated)
         .then(() => {
           closeModalFn();
-          // success feedback
-          // NOTE: realtime listener will update the UI when DB write completes.
         })
         .catch(() => {
           alert('Failed to save changes. See console for details.');
         });
     });
 
-    deleteSubmissionBtn.addEventListener('click', () => {
-      deleteDriverSubmission();
-    });
-
-    submitChangesBtn.addEventListener('click', () => {
-      // For this example we simply pull data from fields and push as an update.
-      const patch = {
-        name: fieldName.textContent !== '—' ? fieldName.textContent : '',
-        phone: fieldContact.textContent !== '—' ? fieldContact.textContent : '',
-        vehicle: fieldVehicle.textContent !== '—' ? fieldVehicle.textContent : '',
-        plate: fieldPlate.textContent !== '—' ? fieldPlate.textContent : '',
-        location: fieldLocation.textContent !== '—' ? fieldLocation.textContent : '',
-        availability: fieldAvailability.textContent !== '—' ? fieldAvailability.textContent : '',
-        notes: fieldNotes.textContent !== '—' ? fieldNotes.textContent : ''
-      };
-      updateDriverData(patch).catch(()=>{ alert('Submit failed.'); });
-    });
-
-    editInfoBtn.addEventListener('click', () => {
+    // Quick view
+    quickViewProfile.addEventListener('click', () => {
       if (driverRef) {
-        driverRef.once('value').then(snap => openEditModalFromData(snap.val())).catch(()=>openEditModalFromData(null));
+        driverRef.once('value').then(snap => openQuickView(snap.val())).catch(() => openQuickView(null));
+      } else {
+        openQuickView(null);
+      }
+    });
+
+    // Vehicle view/edit
+    viewVehicleBtn.addEventListener('click', () => {
+      if (driverRef) {
+        driverRef.once('value').then(snap => {
+          const data = snap.val();
+          document.getElementById('modalTitle').textContent = 'Vehicle details';
+          modalVehicle.value = data && data.vehicle ? data.vehicle : '';
+          modalPlate.value = data && data.plate ? data.plate : '';
+          modalNotes.value = data && data.notes ? data.notes : '';
+          // disable name & phone for this view
+          modalName.value = '';
+          modalName.disabled = modalPhone.disabled = true;
+          document.getElementById('saveModal').style.display = '';
+          modalBackdrop.classList.add('show');
+          modalBackdrop.setAttribute('aria-hidden', 'false');
+        }).catch(()=>alert('Unable to load vehicle info.'));
+      } else {
+        alert('No vehicle info available.');
+      }
+    });
+    editVehicleBtn.addEventListener('click', () => {
+      if (driverRef) {
+        driverRef.once('value').then(snap => {
+          openEditModalFromData(snap.val());
+        }).catch(()=>openEditModalFromData(null));
       } else {
         openEditModalFromData(null);
       }
     });
 
-    menuLogout.addEventListener('click', signOut);
-    sidebarLogout.addEventListener('click', signOut);
+    // Update availability (prompt for a datetime string or simple input)
+    updateAvailabilityBtn.addEventListener('click', () => {
+      const val = prompt('Enter next availability (e.g. 2025-12-05 08:00 or "Today 09:00")');
+      if (val !== null) {
+        updateDriverData({ availability: val }).catch(()=>alert('Failed to update availability.'));
+      }
+    });
 
-    // Example action: share location using Geolocation API and save to DB
-    const locateBtn = document.getElementById('locateBtn');
+    // Share location (geolocation API)
     if (locateBtn) {
       locateBtn.addEventListener('click', () => {
         if (!navigator.geolocation) {
@@ -377,6 +489,10 @@
           updateDriverData({ location: coords }).then(() => {
             locateBtn.disabled = false;
             locateBtn.textContent = 'Share location';
+          }).catch(()=> {
+            locateBtn.disabled = false;
+            locateBtn.textContent = 'Share location';
+            alert('Failed to update location.');
           });
         }, err => {
           console.error('Geolocation failed:', err);
@@ -387,34 +503,67 @@
       });
     }
 
-    // Refresh status
-    const refreshStatus = document.getElementById('refreshStatus');
-    if (refreshStatus) {
-      refreshStatus.addEventListener('click', () => {
+    // Messages button (placeholder)
+    newMessageBtn.addEventListener('click', () => {
+      alert('Messages are not implemented yet. This could open an in-app messaging UI.');
+    });
+
+    // Refresh and details
+    if (refreshStatusBtn) {
+      refreshStatusBtn.addEventListener('click', () => {
         if (driverRef && currentUid) {
           driverRef.once('value').then(snap => loadDriverData(snap.val()));
         }
       });
     }
+    if (statusDetailsBtn) {
+      statusDetailsBtn.addEventListener('click', () => {
+        if (driverRef) {
+          driverRef.once('value').then(snap => {
+            const data = snap.val() || {};
+            alert('Status details:\n' + JSON.stringify(data, null, 2));
+          });
+        } else {
+          alert('No status data available.');
+        }
+      });
+    }
+
+    // Delete & submit & edit-info
+    deleteSubmissionBtn.addEventListener('click', ()=>deleteDriverSubmission());
+    submitChangesBtn.addEventListener('click', () => {
+      const patch = {
+        name: fieldName.textContent !== '—' ? fieldName.textContent : '',
+        phone: fieldContact.textContent !== '—' ? fieldContact.textContent : '',
+        vehicle: fieldVehicle.textContent !== '—' ? fieldVehicle.textContent : '',
+        plate: fieldPlate.textContent !== '—' ? fieldPlate.textContent : '',
+        location: fieldLocation.textContent !== '—' ? fieldLocation.textContent : '',
+        availability: fieldAvailability.textContent !== '—' ? fieldAvailability.textContent : '',
+        notes: fieldNotes.textContent !== '—' ? fieldNotes.textContent : ''
+      };
+      updateDriverData(patch).catch(()=>alert('Submit failed.'));
+    });
+    editInfoBtn.addEventListener('click', () => {
+      if (driverRef) {
+        driverRef.once('value').then(snap => openEditModalFromData(snap.val())).catch(()=>openEditModalFromData(null));
+      } else {
+        openEditModalFromData(null);
+      }
+    });
+
+    // Logout
+    menuLogout.addEventListener('click', signOut);
+    sidebarLogout.addEventListener('click', signOut);
   }
 
-  function closeModalFn() {
-    modalBackdrop.classList.remove('show');
-    modalBackdrop.setAttribute('aria-hidden', 'true');
-  }
-
-  // Initialize app on DOMContentLoaded
+  // init on load
   document.addEventListener('DOMContentLoaded', () => {
     setYear();
     setupEvents();
     initFirebase();
-
-    // Optional: if you want to sign in anonymously during development,
-    // uncomment the following lines (only for dev/testing, not production).
-    // firebase.auth().signInAnonymously().catch(err => console.error('Anon sign-in failed', err));
   });
 
-  // Expose small API on window for debugging in dev only (optional)
+  // Expose some functions for debugging
   window.UNIRAPH = {
     updateDriverData,
     deleteDriverSubmission,

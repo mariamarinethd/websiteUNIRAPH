@@ -303,6 +303,28 @@ footer.site-footer{
 .modal header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
 
+/* AUTH (blocking) */
+.auth-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(2,6,23,0.6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:200;
+}
+.auth-backdrop[aria-hidden="true"]{display:none}
+.auth-card{
+  width:360px;
+  background:var(--card-bg);
+  padding:20px;
+  border-radius:12px;
+  box-shadow:var(--shadow-md);
+}
+.auth-card h2{margin:0 0 6px 0}
+.auth-card label{display:block;margin-top:10px}
+.auth-card input{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(15,23,42,0.06);margin-top:6px}
+
 /* RESPONSIVE */
 @media (max-width:1000px){
   .cards{grid-template-columns:repeat(2,1fr)}
