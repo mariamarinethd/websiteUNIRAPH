@@ -215,7 +215,7 @@
             created_at: new Date().toISOString()
           };
 
-          // Insert into table named "drivers" — ensure this table exists in Supabase (see SQL file)
+        
           const { data, error } = await supabaseClient.from('drivers').insert([supPayload]);
 
           if (error) {

@@ -95,90 +95,6 @@
           </div>
         </div>
 
-    
-
-        <div class="card" id="cardStatus">
-          <h3>Status</h3>
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <div style="display:flex;justify-content:space-between">
-              <div class="muted">Profile completion</div>
-              <div class="value" id="profileCompletion">0%</div>
-            </div>
-            <div style="display:flex;justify-content:space-between">
-              <div class="muted">Last updated</div>
-              <div class="value" id="lastUpdated">—</div>
-            </div>
-            <div style="display:flex;justify-content:space-between">
-              <div class="muted">Active since</div>
-              <div class="value" id="activeSince">—</div>
-            </div>
-          </div>
-          <div class="actions">
-            <button class="btn" id="refreshStatus">Refresh</button>
-            <button class="btn ghost" id="statusDetails">Details</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="full-info" aria-labelledby="fullInfoTitle">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-          <h2 id="fullInfoTitle" style="margin:0;font-size:16px">Complete Driver Information</h2>
-          <div class="muted" style="font-size:13px">Review and manage your submitted data</div>
-        </div>
-
-        <div class="fields-grid" id="fieldsGrid" aria-live="polite">
-          <div class="field">
-            <label>Driver Name</label>
-            <div class="val" id="fieldName">—</div>
-          </div>
-          <div class="field">
-            <label>Contact Number</label>
-            <div class="val" id="fieldContact">—</div>
-          </div>
-          <div class="field">
-            <label>Vehicle Type</label>
-            <div class="val" id="fieldVehicle">—</div>
-          </div>
-          <div class="field">
-            <label>Plate Number</label>
-            <div class="val" id="fieldPlate">—</div>
-          </div>
-          <div class="field">
-            <label>Location</label>
-            <div class="val" id="fieldLocation">—</div>
-          </div>
-          <div class="field">
-            <label>Availability</label>
-            <div class="val" id="fieldAvailability">—</div>
-          </div>
-          <div class="field" style="grid-column:1 / -1">
-            <label>Notes</label>
-            <div class="val" id="fieldNotes" style="white-space:pre-wrap">—</div>
-          </div>
-          <div class="field">
-            <label>Account Email</label>
-            <div class="val" id="fieldEmail">—</div>
-          </div>
-        </div>
-
-        <div class="info-actions">
-          <button class="btn ghost" id="editInfoBtn">Edit Info</button>
-          <button class="btn" id="deleteSubmissionBtn" style="background:#ef4444">Delete Submission</button>
-          <button class="btn" id="submitChangesBtn">Submit Changes</button>
-        </div>
-      </section>
-
-      <!-- New: show all submissions made by the signed-in user -->
-      <section id="submissionsSection" class="full-info" aria-labelledby="submissionsTitle">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-          <h2 id="submissionsTitle" style="margin:0;font-size:16px">Your Submissions</h2>
-          <div class="muted" style="font-size:13px">All form submissions you've created</div>
-        </div>
-
-        <div id="submissionsList" style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
-          <!-- Submissions will be inserted here by dashboard.js -->
-          <div class="muted">Loading submissions…</div>
-        </div>
       </section>
 
       <footer class="site-footer" role="contentinfo">
@@ -187,29 +103,6 @@
           <div style="font-size:13px;color:var(--muted);margin-top:6px">Driver portal — fast, reliable, and secure.</div>
           <div style="margin-top:12px"><small style="color:var(--muted)">© <span id="year"></span> UniraPh</small></div>
         </div>
-
-        <div style="display:flex;gap:24px;flex:1;justify-content:center">
-          <!-- Kept only Legal column; removed Quick Links and Contact per request -->
-          <div class="footer-col">
-            <strong>Legal</strong>
-            <div style="margin-top:8px">
-              <div><a href="#" style="color:var(--muted);text-decoration:none">Terms</a></div>
-              <div><a href="#" style="color:var(--muted);text-decoration:none">Privacy</a></div>
-            </div>
-          </div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-          <div class="socials">
-            <a href="#" aria-label="Twitter">TW</a>
-            <a href="#" aria-label="Facebook">FB</a>
-            <a href="#" aria-label="Instagram">IG</a>
-          </div>
-          <div style="font-size:12px;color:var(--muted)">Made with care in the Philippines</div>
-        </div>
-      </footer>
-    </main>
-  </div>
 
   <!-- Auth modal (blocks dashboard until signed in) -->
   <div class="auth-backdrop" id="authBackdrop" aria-hidden="true">
