@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>UniraPh — Driver Dashboard</title>
+
+  <!-- External stylesheet -->
+  <link rel="stylesheet" href="dashboard.css" />
+
+  <!-- Firebase (compat) SDKs required for the site (Auth + Realtime Database) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+</head>
+<body>
+  <div id="app" class="container" role="application">
+    <aside class="sidebar" aria-label="Primary">
+      <div class="brand-row">
+        <div class="logo" aria-hidden="true">U</div>
+        <div>
+          <div class="site-title">UNIRAPH</div>
+          <div class="site-sub" style="font-size:12px;color:var(--muted);font-weight:600">Driver Interface</div>
+        </div>
+      </div>
+
+      <nav class="nav-links" aria-label="Sidebar navigation">
+        <a href="#" class="active" data-nav="dashboard">Dashboard</a>
+        <a href="#" data-nav="myinfo">My Driver Info</a>
+        <a href="#" data-nav="availability">Update Availability</a>
+        <a href="#" data-nav="settings">Settings</a>
+        <a href="#" id="sidebarLogout">Logout</a>
+      </nav>
+
+      <div style="margin-top:auto;font-size:13px;color:var(--muted)">
+        Need help? <br />
+        <a href="#" style="color:var(--blue-600);font-weight:700;text-decoration:none">Contact support</a>
+      </div>
+    </aside>
+
+    <main class="main" role="main">
+      <header class="topbar" role="banner">
+        <div class="title-row">
+          <div class="logo" aria-hidden="true" style="width:48px;height:48px;border-radius:12px;font-size:18px">U</div>
+          <div>
+            <div class="page-title">Driver Dashboard</div>
+            <div class="page-sub" style="font-size:13px;color:var(--muted);font-weight:600">Welcome back — manage your profile and availability</div>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <div style="display:flex;gap:12px;align-items:center">
+            <button class="btn ghost" id="newMessageBtn" title="Messages">Messages</button>
+            <div class="dropdown" id="profileDropdown">
+              <button class="profile-btn" id="profileBtn" aria-haspopup="true" aria-expanded="false">
+                <div class="avatar-sm" id="avatarInitials">JD</div>
+                <div style="text-align:left">
+                  <div id="headerName" style="font-weight:700;font-size:13px">John Doe</div>
+                  <div style="font-size:12px;color:var(--muted)" id="headerEmail">johndoe@example.com</div>
+                </div>
+              </button>
+
+              <div class="dropdown-menu" id="profileMenu" role="menu" aria-hidden="true">
+                <button id="menuEditProfile" role="menuitem">Edit Profile</button>
+                <button id="menuSettings" role="menuitem">Settings</button>
+                <button id="menuLogout" role="menuitem">Sign out</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="cards" aria-label="Summary cards">
+        <div class="card" id="cardProfile">
+          <h3>Driver Profile</h3>
+          <div class="value" id="displayName">Loading name…</div>
+          <div class="muted">Contact • <span id="displayPhone">—</span></div>
+          <div class="muted">Account • <span id="displayEmail">—</span></div>
+          <div class="actions">
+            <button class="btn" id="editProfileBtn">Edit Profile</button>
+            <button class="btn ghost" id="quickViewProfile">Quick view</button>
+          </div>
+        </div>
+
+        <div class="card" id="cardVehicle">
+          <h3>Vehicle Information</h3>
+          <div class="value" id="vehicleType">—</div>
+          <div class="muted">Plate • <span id="plateNumber">—</span></div>
+          <div style="font-size:13px;color:var(--muted);margin-top:6px">
+            Notes preview:
+            <div id="notesPreview" style="margin-top:6px;color:#0f172a;font-weight:600">—</div>
+          </div>
+          <div class="actions">
+            <button class="btn" id="viewVehicleBtn">View Details</button>
+            <button class="btn ghost" id="editVehicleBtn">Edit</button>
+          </div>
+        </div>
+
+        <div class="card" id="cardAvailability">
+          <h3>Availability & Location</h3>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div class="muted">Next available</div>
+            <div class="value" id="nextAvailable">—</div>
+            <div class="muted">Current location</div>
+            <div class="value" id="currentLocation">—</div>
+          </div>
+          <div class="actions">
+            <button class="btn" id="updateAvailabilityBtn">Update Availability</button>
+            <button class="btn ghost" id="locateBtn">Share location</button>
+          </div>
+        </div>
+
+        <div class="card" id="cardStatus">
+          <h3>Status</h3>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between">
+              <div class="muted">Profile completion</div>
+              <div class="value" id="profileCompletion">0%</div>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <div class="muted">Last updated</div>
+              <div class="value" id="lastUpdated">—</div>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <div class="muted">Active since</div>
+              <div class="value" id="activeSince">—</div>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn" id="refreshStatus">Refresh</button>
+            <button class="btn ghost" id="statusDetails">Details</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="full-info" aria-labelledby="fullInfoTitle">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+          <h2 id="fullInfoTitle" style="margin:0;font-size:16px">Complete Driver Information</h2>
+          <div class="muted" style="font-size:13px">Review and manage your submitted data</div>
+        </div>
+
+        <div class="fields-grid" id="fieldsGrid" aria-live="polite">
+          <div class="field">
+            <label>Driver Name</label>
+            <div class="val" id="fieldName">—</div>
+          </div>
+          <div class="field">
+            <label>Contact Number</label>
+            <div class="val" id="fieldContact">—</div>
+          </div>
+          <div class="field">
+            <label>Vehicle Type</label>
+            <div class="val" id="fieldVehicle">—</div>
+          </div>
+          <div class="field">
+            <label>Plate Number</label>
+            <div class="val" id="fieldPlate">—</div>
+          </div>
+          <div class="field">
+            <label>Location</label>
+            <div class="val" id="fieldLocation">—</div>
+          </div>
+          <div class="field">
+            <label>Availability</label>
+            <div class="val" id="fieldAvailability">—</div>
+          </div>
+          <div class="field" style="grid-column:1 / -1">
+            <label>Notes</label>
+            <div class="val" id="fieldNotes" style="white-space:pre-wrap">—</div>
+          </div>
+          <div class="field">
+            <label>Account Email</label>
+            <div class="val" id="fieldEmail">—</div>
+          </div>
+        </div>
+
+        <div class="info-actions">
+          <button class="btn ghost" id="editInfoBtn">Edit Info</button>
+          <button class="btn" id="deleteSubmissionBtn" style="background:#ef4444">Delete Submission</button>
+          <button class="btn" id="submitChangesBtn">Submit Changes</button>
+        </div>
+      </section>
+
+      <footer class="site-footer" role="contentinfo">
+        <div>
+          <strong>UNIRAPH</strong>
+          <div style="font-size:13px;color:var(--muted);margin-top:6px">Driver portal — fast, reliable, and secure.</div>
+          <div style="margin-top:12px"><small style="color:var(--muted)">© <span id="year"></span> UniraPh</small></div>
+        </div>
+
+        <div style="display:flex;gap:24px;flex:1;justify-content:center">
+          <div class="footer-col">
+            <strong>Quick Links</strong>
+            <div style="margin-top:8px">
+              <div><a href="#" style="color:var(--blue-600);text-decoration:none">Driver Guide</a></div>
+              <div><a href="#" style="color:var(--blue-600);text-decoration:none">Payments</a></div>
+              <div><a href="#" style="color:var(--blue-600);text-decoration:none">Support</a></div>
+            </div>
+          </div>
+
+          <div class="footer-col">
+            <strong>Legal</strong>
+            <div style="margin-top:8px">
+              <div><a href="#" style="color:var(--muted);text-decoration:none">Terms</a></div>
+              <div><a href="#" style="color:var(--muted);text-decoration:none">Privacy</a></div>
+            </div>
+          </div>
+
+          <div class="footer-col">
+            <strong>Contact</strong>
+            <div style="margin-top:8px;color:var(--muted)">
+              support@uniraph.example<br />+63 912 345 6789
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+          <div class="socials">
+            <a href="#" aria-label="Twitter">TW</a>
+            <a href="#" aria-label="Facebook">FB</a>
+            <a href="#" aria-label="Instagram">IG</a>
+          </div>
+          <div style="font-size:12px;color:var(--muted)">Made with care in the Philippines</div>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Edit modal (markup only) -->
+  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <header>
+        <div>
+          <h3 id="modalTitle" style="margin:0">Edit Profile</h3>
+          <div style="font-size:13px;color:var(--muted)">Update the information shown on your profile</div>
+        </div>
+        <button id="closeModal" aria-label="Close" style="background:none;border:none;font-weight:700;cursor:pointer">✕</button>
+      </header>
+
+      <form id="modalForm">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <label style="display:flex;flex-direction:column">
+            Display name
+            <input id="modalName" type="text" />
+          </label>
+          <label style="display:flex;flex-direction:column">
+            Contact number
+            <input id="modalPhone" type="text" />
+          </label>
+          <label style="display:flex;flex-direction:column">
+            Vehicle type
+            <input id="modalVehicle" type="text" />
+          </label>
+          <label style="display:flex;flex-direction:column">
+            Plate number
+            <input id="modalPlate" type="text" />
+          </label>
+        </div>
+
+        <label style="display:flex;flex-direction:column;margin-top:10px">
+          Notes
+          <textarea id="modalNotes" rows="3"></textarea>
+        </label>
+
+        <div class="modal-actions">
+          <button type="button" class="btn ghost" id="cancelModal">Cancel</button>
+          <button type="submit" class="btn" id="saveModal">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dashboard logic (external) -->
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>
