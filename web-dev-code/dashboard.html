@@ -26,9 +26,7 @@
 
       <nav class="nav-links" aria-label="Sidebar navigation">
         <a href="#" class="active" data-nav="dashboard">Dashboard</a>
-        <a href="#" data-nav="myinfo">My Driver Info</a>
-        <a href="#" data-nav="availability">Update Availability</a>
-        <a href="#" data-nav="settings">Settings</a>
+        <!-- Removed per request: My Driver Info, Update Availability, Settings -->
         <a href="#" id="sidebarLogout">Logout</a>
       </nav>
 
@@ -50,7 +48,7 @@
 
         <div class="header-actions">
           <div style="display:flex;gap:12px;align-items:center">
-            <button class="btn ghost" id="newMessageBtn" title="Messages">Messages</button>
+            <!-- Messages button removed per request -->
             <div class="dropdown" id="profileDropdown">
               <button class="profile-btn" id="profileBtn" aria-haspopup="true" aria-expanded="false">
                 <div class="avatar-sm" id="avatarInitials">JD</div>
@@ -62,7 +60,7 @@
 
               <div class="dropdown-menu" id="profileMenu" role="menu" aria-hidden="true">
                 <button id="menuEditProfile" role="menuitem">Edit Profile</button>
-                <button id="menuSettings" role="menuitem">Settings</button>
+                <!-- Removed Settings entry per request -->
                 <button id="menuLogout" role="menuitem">Sign out</button>
               </div>
             </div>
@@ -105,7 +103,7 @@
             <div class="value" id="currentLocation">—</div>
           </div>
           <div class="actions">
-            <button class="btn" id="updateAvailabilityBtn">Update Availability</button>
+            <!-- Update availability button removed from card per request -->
             <button class="btn ghost" id="locateBtn">Share location</button>
           </div>
         </div>
@@ -181,6 +179,19 @@
         </div>
       </section>
 
+      <!-- New: show all submissions made by the signed-in user -->
+      <section id="submissionsSection" class="full-info" aria-labelledby="submissionsTitle">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+          <h2 id="submissionsTitle" style="margin:0;font-size:16px">Your Submissions</h2>
+          <div class="muted" style="font-size:13px">All form submissions you've created</div>
+        </div>
+
+        <div id="submissionsList" style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+          <!-- Submissions will be inserted here by dashboard.js -->
+          <div class="muted">Loading submissions…</div>
+        </div>
+      </section>
+
       <footer class="site-footer" role="contentinfo">
         <div>
           <strong>UNIRAPH</strong>
@@ -189,27 +200,12 @@
         </div>
 
         <div style="display:flex;gap:24px;flex:1;justify-content:center">
-          <div class="footer-col">
-            <strong>Quick Links</strong>
-            <div style="margin-top:8px">
-              <div><a href="#" style="color:var(--blue-600);text-decoration:none">Driver Guide</a></div>
-              <div><a href="#" style="color:var(--blue-600);text-decoration:none">Payments</a></div>
-              <div><a href="#" style="color:var(--blue-600);text-decoration:none">Support</a></div>
-            </div>
-          </div>
-
+          <!-- Kept only Legal column; removed Quick Links and Contact per request -->
           <div class="footer-col">
             <strong>Legal</strong>
             <div style="margin-top:8px">
               <div><a href="#" style="color:var(--muted);text-decoration:none">Terms</a></div>
               <div><a href="#" style="color:var(--muted);text-decoration:none">Privacy</a></div>
-            </div>
-          </div>
-
-          <div class="footer-col">
-            <strong>Contact</strong>
-            <div style="margin-top:8px;color:var(--muted)">
-              support@uniraph.example<br />+63 912 345 6789
             </div>
           </div>
         </div>
@@ -259,8 +255,8 @@
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <header>
         <div>
-          <h3 id="modalTitle" style="margin:0">Edit Profile</h3>
-          <div style="font-size:13px;color:var(--muted)">Update the information shown on your profile</div>
+          <h3 id="modalTitle" style="margin:0">Edit Profile / Submission</h3>
+          <div style="font-size:13px;color:var(--muted)">Update the information shown on your profile or submission</div>
         </div>
         <button id="closeModal" aria-label="Close" style="background:none;border:none;font-weight:700;cursor:pointer">✕</button>
       </header>
@@ -299,6 +295,6 @@
   </div>
 
   <!-- Dashboard logic (external) -->
-  <script src="./js/dashboard.js"></script>
+  <script src="dashboard.js"></script>
 </body>
 </html>

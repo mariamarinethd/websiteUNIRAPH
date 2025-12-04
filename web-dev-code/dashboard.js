@@ -2,8 +2,10 @@
 // Replace firebaseConfig below with your project's config object.
 
 (function () {
+  console.log('dashboard.js loaded');
+
   // ------- Firebase config: REPLACE with your project's details -------
- const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyB0nMt84ndd6F_exO4Zluj_mEzoGxtPoxs",
   authDomain: "project-uniraph.firebaseapp.com",
   databaseURL: "https://project-uniraph-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -79,15 +81,17 @@
   const menuLogout = document.getElementById('menuLogout');
   const sidebarLogout = document.getElementById('sidebarLogout');
 
-  // other buttons
+  // other buttons (some removed from HTML — guard usage)
   const quickViewProfile = document.getElementById('quickViewProfile');
   const viewVehicleBtn = document.getElementById('viewVehicleBtn');
   const editVehicleBtn = document.getElementById('editVehicleBtn');
-  const updateAvailabilityBtn = document.getElementById('updateAvailabilityBtn');
   const locateBtn = document.getElementById('locateBtn');
-  const newMessageBtn = document.getElementById('newMessageBtn');
+  const newMessageBtn = document.getElementById('newMessageBtn'); // may be null
   const refreshStatusBtn = document.getElementById('refreshStatus');
   const statusDetailsBtn = document.getElementById('statusDetails');
+
+  // Submissions UI
+  const submissionsListEl = document.getElementById('submissionsList');
 
   // Firebase instances (will be initialized later)
   let firebaseApp = null;
@@ -96,6 +100,10 @@
   let driverRef = null;
   let currentUid = null;
   let driverListener = null;
+
+  // Submissions refs/listener
+  let submissionsQuery = null;
+  let submissionsListener = null;
 
   function initials(name) {
     return (name || 'D').split(' ').map(n => n[0] || '').slice(0, 2).join('').toUpperCase();
@@ -192,11 +200,14 @@
         currentUid = user.uid;
         hideAuth();
         attachDriverListener(currentUid);
+        attachSubmissionsListener(currentUid);
       } else {
         currentUid = null;
         detachDriverListener();
+        detachSubmissionsListener();
         showAuth();
         loadDriverData(null);
+        renderSubmissionsEmpty();
       }
     });
   }
@@ -221,101 +232,164 @@
     driverListener = null;
   }
 
-  function updateDriverData(patch) {
-    if (!currentUid) {
-      alert('Not signed in.');
-      return Promise.reject(new Error('Not signed in'));
-    }
-    const now = new Date().toISOString();
-    patch.lastUpdated = now;
-    const updates = {};
-    const allowed = ['name', 'phone', 'vehicle', 'plate', 'location', 'availability', 'notes', 'lastUpdated', 'activeSince', 'email'];
-    for (const k of Object.keys(patch)) {
-      if (allowed.includes(k)) updates[k] = patch[k];
-    }
-    return db.ref('drivers/' + currentUid).update(updates)
-      .then(() => {
-        console.log('Driver updated', updates);
-      })
-      .catch(err => {
-        console.error('Update failed', err);
-        throw err;
+  // SUBMISSIONS: listen to /submissions where child 'uid' equals currentUid
+  function attachSubmissionsListener(uid) {
+    if (!db) return;
+    detachSubmissionsListener();
+    try {
+      submissionsQuery = db.ref('submissions').orderByChild('uid').equalTo(uid);
+      submissionsListener = submissionsQuery.on('value', snapshot => {
+        renderSubmissionsSnapshot(snapshot);
+      }, err => {
+        console.error('Submissions listener error:', err);
+        submissionsListEl.innerHTML = '<div class="muted">Unable to load submissions.</div>';
       });
+    } catch (err) {
+      console.error('attachSubmissionsListener error', err);
+    }
   }
 
-  function deleteDriverSubmission() {
-    if (!currentUid) {
-      alert('Not signed in.');
+  function detachSubmissionsListener() {
+    if (submissionsQuery && submissionsListener) {
+      submissionsQuery.off('value', submissionsListener);
+    }
+    submissionsQuery = null;
+    submissionsListener = null;
+  }
+
+  function renderSubmissionsEmpty() {
+    submissionsListEl.innerHTML = '<div class="muted">No submissions yet.</div>';
+  }
+
+  function sanitizeText(s) {
+    if (s === undefined || s === null) return '—';
+    return String(s);
+  }
+
+  function renderSubmissionsSnapshot(snapshot) {
+    const val = snapshot.exists() ? snapshot.val() : null;
+    submissionsListEl.innerHTML = '';
+    if (!val) {
+      renderSubmissionsEmpty();
       return;
     }
-    if (!confirm('Delete your submission? This action cannot be undone.')) return;
-    return db.ref('drivers/' + currentUid).remove()
-      .then(() => {
-        alert('Submission deleted.');
-      })
-      .catch(err => {
-        console.error('Delete failed', err);
-        alert('Delete failed. See console for details.');
-      });
-  }
 
-  function signOut() {
-    if (!auth) return;
-    auth.signOut().then(() => {
-      // Signed out
-    }).catch(err => {
-      console.error('Sign out error', err);
-      alert('Sign out failed. See console for details.');
+    // snapshot.val() is an object keyed by submission id
+    const entries = Object.entries(val);
+    entries.sort((a, b) => {
+      const ta = a[1].createdAt || a[1].lastUpdated || '';
+      const tb = b[1].createdAt || b[1].lastUpdated || '';
+      return (tb > ta) ? 1 : -1;
     });
-  }
 
-  function showAuth(message) {
-    if (authBackdrop) {
-      authBackdrop.setAttribute('aria-hidden', 'false');
-      if (message && authError) {
-        authError.style.display = 'block';
-        authError.textContent = message;
-      } else if (authError) {
-        authError.style.display = 'none';
+    for (const [id, data] of entries) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.style.padding = '12px';
+      card.style.display = 'flex';
+      card.style.flexDirection = 'column';
+      card.style.gap = '8px';
+
+      const rowTop = document.createElement('div');
+      rowTop.style.display = 'flex';
+      rowTop.style.justifyContent = 'space-between';
+      rowTop.style.alignItems = 'center';
+
+      const title = document.createElement('div');
+      title.innerHTML = `<strong>${sanitizeText(data.name || data.driverName || 'Submission')}</strong><div style="font-size:12px;color:var(--muted)">${sanitizeText(data.createdAt || data.lastUpdated || '')}</div>`;
+
+      const actions = document.createElement('div');
+      actions.style.display = 'flex';
+      actions.style.gap = '6px';
+
+      const btnView = document.createElement('button');
+      btnView.className = 'btn ghost';
+      btnView.textContent = 'View';
+      btnView.addEventListener('click', () => {
+        openSubmissionInModal(id, data, /*readOnly*/ true);
+      });
+
+      const btnEdit = document.createElement('button');
+      btnEdit.className = 'btn';
+      btnEdit.textContent = 'Edit';
+      btnEdit.addEventListener('click', () => {
+        openSubmissionInModal(id, data, /*readOnly*/ false);
+      });
+
+      const btnDelete = document.createElement('button');
+      btnDelete.className = 'btn ghost';
+      btnDelete.style.background = '#ef4444';
+      btnDelete.style.color = 'white';
+      btnDelete.textContent = 'Delete';
+      btnDelete.addEventListener('click', () => {
+        if (!confirm('Delete this submission?')) return;
+        db.ref('submissions/' + id).remove().catch(err => {
+          console.error('Delete submission failed', err);
+          alert('Delete failed. See console.');
+        });
+      });
+
+      actions.appendChild(btnView);
+      actions.appendChild(btnEdit);
+      actions.appendChild(btnDelete);
+
+      rowTop.appendChild(title);
+      rowTop.appendChild(actions);
+
+      // body details
+      const body = document.createElement('div');
+      body.style.display = 'grid';
+      body.style.gridTemplateColumns = 'repeat(2,1fr)';
+      body.style.gap = '8px';
+
+      function mkField(label, val) {
+        const f = document.createElement('div');
+        f.style.background = 'var(--blue-100)';
+        f.style.padding = '8px';
+        f.style.borderRadius = '8px';
+        f.innerHTML = `<div style="font-size:12px;color:var(--muted);font-weight:700">${label}</div><div style="font-weight:700;color:#07143a">${sanitizeText(val)}</div>`;
+        return f;
       }
+
+      body.appendChild(mkField('Contact', data.phone || data.contact || '—'));
+      body.appendChild(mkField('Vehicle', data.vehicle || '—'));
+      body.appendChild(mkField('Plate', data.plate || '—'));
+      body.appendChild(mkField('Location', data.location || '—'));
+      body.appendChild(mkField('Availability', data.availability || '—'));
+      // Notes span full width
+      const notesWrap = document.createElement('div');
+      notesWrap.style.gridColumn = '1 / -1';
+      notesWrap.style.background = 'var(--blue-100)';
+      notesWrap.style.padding = '8px';
+      notesWrap.style.borderRadius = '8px';
+      notesWrap.innerHTML = `<div style="font-size:12px;color:var(--muted);font-weight:700">Notes</div><div style="font-weight:700;color:#07143a;white-space:pre-wrap">${sanitizeText(data.notes || '')}</div>`;
+      body.appendChild(notesWrap);
+
+      card.appendChild(rowTop);
+      card.appendChild(body);
+
+      submissionsListEl.appendChild(card);
     }
-    // make dashboard non-interactive (aria-hidden)
-    document.getElementById('app').setAttribute('aria-hidden', 'true');
   }
 
-  function hideAuth() {
-    if (authBackdrop) {
-      authBackdrop.setAttribute('aria-hidden', 'true');
-      if (authError) {
-        authError.style.display = 'none';
-      }
-    }
-    document.getElementById('app').setAttribute('aria-hidden', 'false');
-  }
+  // Open submission in modal. If readOnly true, disable inputs.
+  let editingSubmissionId = null;
+  function openSubmissionInModal(id, data, readOnly) {
+    editingSubmissionId = id || null;
+    document.getElementById('modalTitle').textContent = readOnly ? 'View Submission' : (id ? 'Edit Submission' : 'New Submission');
 
-  function openEditModalFromData(data) {
-    modalName.value = data && data.name ? data.name : (auth.currentUser ? (auth.currentUser.displayName || '') : '');
-    modalPhone.value = data && data.phone ? data.phone : '';
+    // populate modal fields — reuse modalName/modalPhone/...
+    modalName.value = data && (data.name || data.driverName) ? (data.name || data.driverName) : (auth.currentUser ? (auth.currentUser.displayName || '') : '');
+    modalPhone.value = data && (data.phone || data.contact) ? (data.phone || data.contact) : '';
     modalVehicle.value = data && data.vehicle ? data.vehicle : '';
     modalPlate.value = data && data.plate ? data.plate : '';
     modalNotes.value = data && data.notes ? data.notes : '';
-    modalBackdrop.classList.add('show');
-    modalBackdrop.setAttribute('aria-hidden', 'false');
-    document.getElementById('modalTitle').textContent = 'Edit Profile';
-  }
 
-  function openQuickView(data) {
-    // reuse modal as quick view (read-only)
-    document.getElementById('modalTitle').textContent = 'Profile quick view';
-    modalName.value = data && data.name ? data.name : '';
-    modalPhone.value = data && data.phone ? data.phone : '';
-    modalVehicle.value = data && data.vehicle ? data.vehicle : '';
-    modalPlate.value = data && data.plate ? data.plate : '';
-    modalNotes.value = data && data.notes ? data.notes : '';
-    // disable inputs
-    modalName.disabled = modalPhone.disabled = modalVehicle.disabled = modalPlate.disabled = modalNotes.disabled = true;
-    document.getElementById('saveModal').style.display = 'none';
-    document.getElementById('cancelModal').textContent = 'Close';
+    // set read-only state if needed
+    modalName.disabled = modalPhone.disabled = modalVehicle.disabled = modalPlate.disabled = modalNotes.disabled = !!readOnly;
+    document.getElementById('saveModal').style.display = readOnly ? 'none' : '';
+    document.getElementById('cancelModal').textContent = readOnly ? 'Close' : 'Cancel';
+
     modalBackdrop.classList.add('show');
     modalBackdrop.setAttribute('aria-hidden', 'false');
   }
@@ -323,157 +397,169 @@
   function closeModalFn() {
     modalBackdrop.classList.remove('show');
     modalBackdrop.setAttribute('aria-hidden', 'true');
-    // enable inputs and restore buttons
     modalName.disabled = modalPhone.disabled = modalVehicle.disabled = modalPlate.disabled = modalNotes.disabled = false;
     document.getElementById('saveModal').style.display = '';
     document.getElementById('cancelModal').textContent = 'Cancel';
+    editingSubmissionId = null;
   }
 
   function setupEvents() {
-    profileBtn.addEventListener('click', (e) => {
-      profileMenu.classList.toggle('show');
-      const expanded = profileBtn.getAttribute('aria-expanded') === 'true';
-      profileBtn.setAttribute('aria-expanded', (!expanded).toString());
-    });
+    if (profileBtn) {
+      profileBtn.addEventListener('click', (e) => {
+        profileMenu.classList.toggle('show');
+        const expanded = profileBtn.getAttribute('aria-expanded') === 'true';
+        profileBtn.setAttribute('aria-expanded', (!expanded).toString());
+      });
+    }
 
     document.addEventListener('click', (ev) => {
-      if (!profileDropdown.contains(ev.target)) {
-        profileMenu.classList.remove('show');
-        profileBtn.setAttribute('aria-expanded', 'false');
+      if (profileDropdown && !profileDropdown.contains(ev.target)) {
+        if (profileMenu) profileMenu.classList.remove('show');
+        if (profileBtn) profileBtn.setAttribute('aria-expanded', 'false');
       }
     });
 
     // Auth form sign in
-    authForm.addEventListener('submit', (ev) => {
-      ev.preventDefault();
-      const email = authEmail.value.trim();
-      const pass = authPassword.value;
-      auth.signInWithEmailAndPassword(email, pass)
-        .then(() => {
-          // signed in; onAuthStateChanged will run
-        })
-        .catch(err => {
-          console.error('Sign in failed', err);
-          showAuth(err.message || 'Sign in failed');
-        });
-    });
+    if (authForm) {
+      authForm.addEventListener('submit', (ev) => {
+        ev.preventDefault();
+        const email = authEmail.value.trim();
+        const pass = authPassword.value;
+        auth.signInWithEmailAndPassword(email, pass)
+          .then(() => {
+            // onAuthStateChanged will handle UI change
+          })
+          .catch(err => {
+            console.error('Sign in failed', err);
+            showAuth(err.message || 'Sign in failed');
+          });
+      });
+    }
 
     // Create account
-    createAccountBtn.addEventListener('click', () => {
-      const email = authEmail.value.trim();
-      const pass = authPassword.value;
-      if (!email || pass.length < 6) {
-        showAuth('Provide a valid email and a password with at least 6 characters.');
-        return;
-      }
-      auth.createUserWithEmailAndPassword(email, pass)
-        .then(cred => {
-          // create an initial driver DB node
-          const uid = cred.user.uid;
-          const initial = {
-            email: email,
-            name: cred.user.displayName || '',
-            activeSince: new Date().toISOString(),
-            lastUpdated: new Date().toISOString()
-          };
-          return db.ref('drivers/' + uid).set(initial);
-        })
-        .catch(err => {
-          console.error('Create account failed', err);
-          showAuth(err.message || 'Account creation failed');
-        });
-    });
-
-    // Anonymous sign-in for testing (not recommended for production)
-    anonSignInBtn.addEventListener('click', () => {
-      auth.signInAnonymously().catch(err => {
-        console.error('Anonymous sign-in failed', err);
-        showAuth(err.message || 'Anonymous sign in failed');
+    if (createAccountBtn) {
+      createAccountBtn.addEventListener('click', () => {
+        const email = authEmail.value.trim();
+        const pass = authPassword.value;
+        if (!email || pass.length < 6) {
+          showAuth('Provide a valid email and a password with at least 6 characters.');
+          return;
+        }
+        auth.createUserWithEmailAndPassword(email, pass)
+          .then(cred => {
+            const uid = cred.user.uid;
+            const initial = {
+              email: email,
+              name: cred.user.displayName || '',
+              activeSince: new Date().toISOString(),
+              lastUpdated: new Date().toISOString()
+            };
+            return db.ref('drivers/' + uid).set(initial);
+          })
+          .catch(err => {
+            console.error('Create account failed', err);
+            showAuth(err.message || 'Account creation failed');
+          });
       });
-    });
+    }
+
+    // Anonymous sign-in
+    if (anonSignInBtn) {
+      anonSignInBtn.addEventListener('click', () => {
+        auth.signInAnonymously().catch(err => {
+          console.error('Anonymous sign-in failed', err);
+          showAuth(err.message || 'Anonymous sign in failed');
+        });
+      });
+    }
 
     // Edit profile
-    editProfileBtn.addEventListener('click', () => {
-      if (driverRef) {
-        driverRef.once('value').then(snap => openEditModalFromData(snap.val())).catch(() => openEditModalFromData(null));
-      } else {
-        openEditModalFromData(null);
-      }
-    });
-    menuEditProfile.addEventListener('click', (e) => {
-      editProfileBtn.click();
-    });
+    if (editProfileBtn) {
+      editProfileBtn.addEventListener('click', () => {
+        if (driverRef) {
+          driverRef.once('value').then(snap => openSubmissionInModal(null, snap.val(), false)).catch(() => openSubmissionInModal(null, null, false));
+        } else {
+          openSubmissionInModal(null, null, false);
+        }
+      });
+    }
+    if (menuEditProfile) {
+      menuEditProfile.addEventListener('click', (e) => {
+        if (editProfileBtn) editProfileBtn.click();
+      });
+    }
 
-    closeModal.addEventListener('click', closeModalFn);
-    cancelModal.addEventListener('click', closeModalFn);
-    modalBackdrop.addEventListener('click', (ev) => {
+    if (closeModal) closeModal.addEventListener('click', closeModalFn);
+    if (cancelModal) cancelModal.addEventListener('click', closeModalFn);
+    if (modalBackdrop) modalBackdrop.addEventListener('click', (ev) => {
       if (ev.target === modalBackdrop) closeModalFn();
     });
 
-    modalForm.addEventListener('submit', (ev) => {
-      ev.preventDefault();
-      const updated = {
-        name: modalName.value.trim(),
-        phone: modalPhone.value.trim(),
-        vehicle: modalVehicle.value.trim(),
-        plate: modalPlate.value.trim(),
-        notes: modalNotes.value.trim()
-      };
-      updateDriverData(updated)
-        .then(() => {
-          closeModalFn();
-        })
-        .catch(() => {
-          alert('Failed to save changes. See console for details.');
-        });
-    });
+    if (modalForm) {
+      modalForm.addEventListener('submit', (ev) => {
+        ev.preventDefault();
+        const updated = {
+          name: modalName.value.trim(),
+          phone: modalPhone.value.trim(),
+          vehicle: modalVehicle.value.trim(),
+          plate: modalPlate.value.trim(),
+          notes: modalNotes.value.trim(),
+          uid: currentUid,
+          lastUpdated: new Date().toISOString()
+        };
 
-    // Quick view
-    quickViewProfile.addEventListener('click', () => {
-      if (driverRef) {
-        driverRef.once('value').then(snap => openQuickView(snap.val())).catch(() => openQuickView(null));
-      } else {
-        openQuickView(null);
-      }
-    });
+        // If editingSubmissionId, update that submission, otherwise update driver's profile
+        if (editingSubmissionId) {
+          db.ref('submissions/' + editingSubmissionId).update(updated).then(() => {
+            closeModalFn();
+          }).catch(err => {
+            console.error('Update submission failed', err);
+            alert('Failed to save submission.');
+          });
+        } else {
+          // update driver profile also (keeps previous behavior)
+          updateDriverData(updated).then(() => {
+            closeModalFn();
+          }).catch(() => {
+            alert('Failed to save changes. See console for details.');
+          });
+        }
+      });
+    }
+
+    // Quick view (guard if element exists)
+    if (quickViewProfile) {
+      quickViewProfile.addEventListener('click', () => {
+        if (driverRef) {
+          driverRef.once('value').then(snap => openSubmissionInModal(null, snap.val(), true)).catch(() => openSubmissionInModal(null, null, true));
+        } else {
+          openSubmissionInModal(null, null, true);
+        }
+      });
+    }
 
     // Vehicle view/edit
-    viewVehicleBtn.addEventListener('click', () => {
-      if (driverRef) {
-        driverRef.once('value').then(snap => {
-          const data = snap.val();
-          document.getElementById('modalTitle').textContent = 'Vehicle details';
-          modalVehicle.value = data && data.vehicle ? data.vehicle : '';
-          modalPlate.value = data && data.plate ? data.plate : '';
-          modalNotes.value = data && data.notes ? data.notes : '';
-          // disable name & phone for this view
-          modalName.value = '';
-          modalName.disabled = modalPhone.disabled = true;
-          document.getElementById('saveModal').style.display = '';
-          modalBackdrop.classList.add('show');
-          modalBackdrop.setAttribute('aria-hidden', 'false');
-        }).catch(()=>alert('Unable to load vehicle info.'));
-      } else {
-        alert('No vehicle info available.');
-      }
-    });
-    editVehicleBtn.addEventListener('click', () => {
-      if (driverRef) {
-        driverRef.once('value').then(snap => {
-          openEditModalFromData(snap.val());
-        }).catch(()=>openEditModalFromData(null));
-      } else {
-        openEditModalFromData(null);
-      }
-    });
-
-    // Update availability (prompt for a datetime string or simple input)
-    updateAvailabilityBtn.addEventListener('click', () => {
-      const val = prompt('Enter next availability (e.g. 2025-12-05 08:00 or "Today 09:00")');
-      if (val !== null) {
-        updateDriverData({ availability: val }).catch(()=>alert('Failed to update availability.'));
-      }
-    });
+    if (viewVehicleBtn) {
+      viewVehicleBtn.addEventListener('click', () => {
+        if (driverRef) {
+          driverRef.once('value').then(snap => {
+            const data = snap.val();
+            openSubmissionInModal(null, data, true);
+          }).catch(()=>alert('Unable to load vehicle info.'));
+        } else {
+          alert('No vehicle info available.');
+        }
+      });
+    }
+    if (editVehicleBtn) {
+      editVehicleBtn.addEventListener('click', () => {
+        if (driverRef) {
+          driverRef.once('value').then(snap => openSubmissionInModal(null, snap.val(), false)).catch(()=>openSubmissionInModal(null, null, false));
+        } else {
+          openSubmissionInModal(null, null, false);
+        }
+      });
+    }
 
     // Share location (geolocation API)
     if (locateBtn) {
@@ -503,16 +589,20 @@
       });
     }
 
-    // Messages button (placeholder)
-    newMessageBtn.addEventListener('click', () => {
-      alert('Messages are not implemented yet. This could open an in-app messaging UI.');
-    });
+    // Messages button (removed) — guard
+    if (newMessageBtn) {
+      newMessageBtn.addEventListener('click', () => {
+        alert('Messages are not implemented yet.');
+      });
+    }
 
     // Refresh and details
     if (refreshStatusBtn) {
       refreshStatusBtn.addEventListener('click', () => {
         if (driverRef && currentUid) {
           driverRef.once('value').then(snap => loadDriverData(snap.val()));
+          // refresh submissions too
+          if (submissionsQuery) submissionsQuery.once('value').then(snap => renderSubmissionsSnapshot(snap));
         }
       });
     }
@@ -530,8 +620,17 @@
     }
 
     // Delete & submit & edit-info
-    deleteSubmissionBtn.addEventListener('click', ()=>deleteDriverSubmission());
-    submitChangesBtn.addEventListener('click', () => {
+    if (deleteSubmissionBtn) deleteSubmissionBtn.addEventListener('click', ()=> {
+      // delete driver's profile node
+      if (!currentUid) { alert('Not signed in.'); return; }
+      if (!confirm('Delete your driver profile? This will remove your profile node under /drivers/{uid}')) return;
+      db.ref('drivers/' + currentUid).remove().catch(err => {
+        console.error('Delete profile failed', err);
+        alert('Delete failed.');
+      });
+    });
+
+    if (submitChangesBtn) submitChangesBtn.addEventListener('click', () => {
       const patch = {
         name: fieldName.textContent !== '—' ? fieldName.textContent : '',
         phone: fieldContact.textContent !== '—' ? fieldContact.textContent : '',
@@ -543,20 +642,76 @@
       };
       updateDriverData(patch).catch(()=>alert('Submit failed.'));
     });
-    editInfoBtn.addEventListener('click', () => {
+
+    if (editInfoBtn) editInfoBtn.addEventListener('click', () => {
       if (driverRef) {
-        driverRef.once('value').then(snap => openEditModalFromData(snap.val())).catch(()=>openEditModalFromData(null));
+        driverRef.once('value').then(snap => openSubmissionInModal(null, snap.val(), false)).catch(()=>openSubmissionInModal(null, null, false));
       } else {
-        openEditModalFromData(null);
+        openSubmissionInModal(null, null, false);
       }
     });
 
     // Logout
-    menuLogout.addEventListener('click', signOut);
-    sidebarLogout.addEventListener('click', signOut);
+    if (menuLogout) menuLogout.addEventListener('click', signOut);
+    if (sidebarLogout) sidebarLogout.addEventListener('click', signOut);
   }
 
-  // init on load
+  function updateDriverData(patch) {
+    if (!currentUid) {
+      alert('Not signed in.');
+      return Promise.reject(new Error('Not signed in'));
+    }
+    const now = new Date().toISOString();
+    patch.lastUpdated = now;
+    const updates = {};
+    const allowed = ['name', 'phone', 'vehicle', 'plate', 'location', 'availability', 'notes', 'lastUpdated', 'activeSince', 'email', 'uid'];
+    for (const k of Object.keys(patch)) {
+      if (allowed.includes(k)) updates[k] = patch[k];
+    }
+    return db.ref('drivers/' + currentUid).update(updates)
+      .then(() => {
+        console.log('Driver updated', updates);
+      })
+      .catch(err => {
+        console.error('Update failed', err);
+        throw err;
+      });
+  }
+
+  function signOut() {
+    if (!auth) return;
+    auth.signOut().then(() => {
+      // Signed out
+    }).catch(err => {
+      console.error('Sign out error', err);
+      alert('Sign out failed. See console for details.');
+    });
+  }
+
+  function showAuth(message) {
+    if (authBackdrop) {
+      authBackdrop.setAttribute('aria-hidden', 'false');
+      if (message && authError) {
+        authError.style.display = 'block';
+        authError.textContent = message;
+      } else if (authError) {
+        authError.style.display = 'none';
+      }
+    }
+    document.getElementById('app').setAttribute('aria-hidden', 'true');
+  }
+
+  function hideAuth() {
+    if (authBackdrop) {
+      authBackdrop.setAttribute('aria-hidden', 'true');
+      if (authError) {
+        authError.style.display = 'none';
+      }
+    }
+    document.getElementById('app').setAttribute('aria-hidden', 'false');
+  }
+
+  // Initialize app on DOMContentLoaded
   document.addEventListener('DOMContentLoaded', () => {
     setYear();
     setupEvents();
@@ -566,7 +721,6 @@
   // Expose some functions for debugging
   window.UNIRAPH = {
     updateDriverData,
-    deleteDriverSubmission,
     signOut
   };
 })();
